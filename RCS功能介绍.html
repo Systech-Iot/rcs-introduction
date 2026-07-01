@@ -1,0 +1,1704 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>士腾 RCS 功能介绍</title>
+    <style>
+      :root {
+        --ink: #17212f;
+        --text: #2d3a4a;
+        --muted: #64748b;
+        --line: #dde5ee;
+        --surface: #ffffff;
+        --surface-soft: #f6f8fb;
+        --band: #eef3f8;
+        --purple: #5e1d79;
+        --gold: #b99a13;
+        --green: #047857;
+        --blue: #2863d9;
+        --orange: #c96b2c;
+        --shadow: 0 18px 50px rgba(31, 47, 70, 0.12);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden;
+        scroll-behavior: smooth;
+      }
+
+      body {
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden;
+        margin: 0;
+        color: var(--text);
+        background: var(--surface-soft);
+        font-family:
+          Inter,
+          "PingFang SC",
+          "Microsoft YaHei",
+          Arial,
+          sans-serif;
+        line-height: 1.65;
+        overflow-wrap: break-word;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      img {
+        max-width: 100%;
+        display: block;
+      }
+
+      .page {
+        width: 100%;
+        max-width: 100%;
+        min-width: 320px;
+        overflow: hidden;
+      }
+
+      .topbar {
+        width: 100%;
+        max-width: 100%;
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        background: rgba(255, 255, 255, 0.92);
+        border-bottom: 1px solid rgba(221, 229, 238, 0.9);
+        backdrop-filter: blur(18px);
+      }
+
+      .nav {
+        width: min(1180px, calc(100% - 40px));
+        max-width: calc(100% - 40px);
+        min-height: 76px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+        min-width: 0;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        min-width: 220px;
+        flex: 0 0 auto;
+      }
+
+      .brand-logo {
+        width: 162px;
+        height: 64px;
+        object-fit: contain;
+        object-position: left center;
+        background: #ffffff;
+      }
+
+      .brand-text {
+        display: flex;
+        flex-direction: column;
+        gap: 1px;
+      }
+
+      .brand-title {
+        color: var(--ink);
+        font-size: 15px;
+        font-weight: 800;
+        line-height: 1.2;
+      }
+
+      .brand-subtitle {
+        color: var(--muted);
+        font-size: 12px;
+        white-space: nowrap;
+      }
+
+      .nav-links {
+        min-width: 0;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 18px;
+        overflow-x: auto;
+        color: #48566a;
+        font-size: 14px;
+        white-space: nowrap;
+        scrollbar-width: none;
+      }
+
+      .nav-links::-webkit-scrollbar {
+        display: none;
+      }
+
+      .nav-links a {
+        padding: 8px 0;
+        border-bottom: 2px solid transparent;
+      }
+
+      .nav-links a:hover {
+        color: var(--purple);
+        border-bottom-color: var(--gold);
+      }
+
+      .hero {
+        position: relative;
+        min-height: 82vh;
+        display: flex;
+        align-items: center;
+        color: #ffffff;
+        background:
+          linear-gradient(90deg, rgba(11, 22, 35, 0.88), rgba(11, 22, 35, 0.58) 48%, rgba(11, 22, 35, 0.18)),
+          linear-gradient(180deg, rgba(20, 34, 52, 0.15), rgba(20, 34, 52, 0.65)),
+          url("docs/assets/rcs-hero-bg.png") center / cover no-repeat;
+      }
+
+      .hero::after {
+        content: "";
+        position: absolute;
+        inset: auto 0 0;
+        height: 120px;
+        background: linear-gradient(180deg, rgba(246, 248, 251, 0), var(--surface-soft));
+      }
+
+      .hero-inner {
+        position: relative;
+        z-index: 1;
+        width: min(1180px, calc(100% - 40px));
+        max-width: calc(100% - 40px);
+        margin: 0 auto;
+        padding: 86px 0 120px;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        margin: 0 0 18px;
+        color: #f7d96a;
+        font-size: 14px;
+        font-weight: 700;
+      }
+
+      .eyebrow::before {
+        content: "";
+        width: 34px;
+        height: 2px;
+        background: #f7d96a;
+      }
+
+      h1 {
+        max-width: 720px;
+        margin: 0;
+        color: #ffffff;
+        font-size: clamp(46px, 7vw, 82px);
+        line-height: 1.02;
+        font-weight: 900;
+        letter-spacing: 0;
+      }
+
+      .hero-copy {
+        max-width: 720px;
+        margin: 24px 0 0;
+        color: rgba(255, 255, 255, 0.86);
+        font-size: 20px;
+        line-height: 1.8;
+      }
+
+      .hero-actions {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-top: 34px;
+      }
+
+      .btn {
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 10px 18px;
+        border-radius: 6px;
+        font-weight: 800;
+        font-size: 14px;
+      }
+
+      .btn-primary {
+        color: #231a00;
+        background: #f7d96a;
+      }
+
+      .btn-secondary {
+        color: #ffffff;
+        border: 1px solid rgba(255, 255, 255, 0.42);
+        background: rgba(255, 255, 255, 0.1);
+      }
+
+      .hero-metrics {
+        width: min(960px, 100%);
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 54px;
+      }
+
+      .metric {
+        min-height: 106px;
+        padding: 18px;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        background: rgba(10, 20, 32, 0.42);
+        backdrop-filter: blur(12px);
+      }
+
+      .metric strong {
+        display: block;
+        color: #ffffff;
+        font-size: 25px;
+        line-height: 1.2;
+      }
+
+      .metric span {
+        display: block;
+        margin-top: 8px;
+        color: rgba(255, 255, 255, 0.72);
+        font-size: 13px;
+      }
+
+      .section {
+        padding: 86px 0;
+      }
+
+      .section.alt {
+        background: #ffffff;
+      }
+
+      .section.deep {
+        color: #ffffff;
+        background:
+          linear-gradient(135deg, rgba(94, 29, 121, 0.94), rgba(22, 64, 83, 0.94)),
+          url("docs/assets/rcs-hero-bg.png") center / cover no-repeat;
+      }
+
+      .container {
+        width: min(1180px, calc(100% - 40px));
+        max-width: calc(100% - 40px);
+        margin: 0 auto;
+      }
+
+      .section-head {
+        display: grid;
+        grid-template-columns: minmax(0, 0.9fr) minmax(260px, 0.55fr);
+        gap: 46px;
+        align-items: end;
+        margin-bottom: 34px;
+      }
+
+      .section-kicker {
+        color: var(--purple);
+        font-size: 13px;
+        font-weight: 900;
+        margin: 0 0 10px;
+      }
+
+      .deep .section-kicker {
+        color: #f7d96a;
+      }
+
+      h2 {
+        margin: 0;
+        color: var(--ink);
+        font-size: 34px;
+        line-height: 1.22;
+        letter-spacing: 0;
+      }
+
+      .deep h2,
+      .deep .lead,
+      .deep .section-kicker {
+        color: #ffffff;
+      }
+
+      .lead {
+        margin: 0;
+        color: var(--muted);
+        font-size: 16px;
+      }
+
+      .feature-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 16px;
+      }
+
+      .feature-card,
+      .capability-card,
+      .scenario-card,
+      .enhance-card,
+      .case-card {
+        border-radius: 8px;
+        border: 1px solid var(--line);
+        background: var(--surface);
+        box-shadow: 0 8px 26px rgba(28, 44, 64, 0.06);
+      }
+
+      .feature-card {
+        padding: 22px;
+        min-height: 220px;
+      }
+
+      .card-icon {
+        width: 46px;
+        height: 46px;
+        display: grid;
+        place-items: center;
+        border-radius: 8px;
+        color: #ffffff;
+        background: var(--purple);
+        font-weight: 900;
+        font-size: 18px;
+      }
+
+      .card-icon.green {
+        background: var(--green);
+      }
+
+      .card-icon.blue {
+        background: var(--blue);
+      }
+
+      .card-icon.gold {
+        color: #1f1a05;
+        background: #f0c638;
+      }
+
+      .feature-card h3,
+      .capability-card h3,
+      .scenario-card h3,
+      .enhance-card h3,
+      .case-card h3 {
+        margin: 18px 0 9px;
+        color: var(--ink);
+        font-size: 19px;
+        line-height: 1.35;
+      }
+
+      .feature-card p,
+      .capability-card p,
+      .scenario-card p,
+      .enhance-card p,
+      .case-card p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .architecture {
+        position: relative;
+        padding: 30px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #ffffff;
+        box-shadow: var(--shadow);
+      }
+
+      .arch-row {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 12px;
+        align-items: stretch;
+      }
+
+      .arch-node {
+        min-height: 126px;
+        padding: 18px 14px;
+        border-radius: 8px;
+        border: 1px solid #d9e4ef;
+        background: #f8fafc;
+      }
+
+      .arch-node.primary {
+        color: #ffffff;
+        background: linear-gradient(135deg, #5e1d79, #214d7a);
+        border-color: transparent;
+      }
+
+      .arch-node h3 {
+        margin: 0 0 8px;
+        color: inherit;
+        font-size: 17px;
+      }
+
+      .arch-node p {
+        margin: 0;
+        color: inherit;
+        opacity: 0.78;
+        font-size: 13px;
+      }
+
+      .arch-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 18px;
+      }
+
+      .video-card {
+        border-radius: 8px;
+        border: 1px solid var(--line);
+        background: #ffffff;
+        box-shadow: 0 8px 26px rgba(28, 44, 64, 0.06);
+      }
+
+      .tag {
+        display: inline-flex;
+        align-items: center;
+        min-height: 28px;
+        padding: 4px 10px;
+        border-radius: 6px;
+        color: #395067;
+        background: #edf3f9;
+        border: 1px solid #d9e4ef;
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .tag.core {
+        color: #ffffff;
+        background: var(--green);
+        border-color: var(--green);
+      }
+
+      .tag.extend {
+        color: #231a00;
+        background: #f5d65f;
+        border-color: #f5d65f;
+      }
+
+      .capability-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+      }
+
+      .capability-card {
+        padding: 24px;
+      }
+
+      .capability-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+      }
+
+      .capability-top img {
+        width: 44px;
+        height: 44px;
+        object-fit: contain;
+      }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        min-height: 26px;
+        padding: 4px 9px;
+        border-radius: 6px;
+        color: var(--green);
+        background: #e7f7ef;
+        font-size: 12px;
+        font-weight: 800;
+        white-space: nowrap;
+      }
+
+      .capability-card ul,
+      .enhance-card ul {
+        margin: 16px 0 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .capability-card li,
+      .enhance-card li {
+        position: relative;
+        margin-top: 10px;
+        padding-left: 18px;
+        color: #46576b;
+        font-size: 14px;
+      }
+
+      .capability-card li::before,
+      .enhance-card li::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 10px;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--gold);
+      }
+
+      .workflow {
+        display: grid;
+        grid-template-columns: 0.88fr 1fr;
+        gap: 34px;
+        align-items: center;
+      }
+
+      .map-visual {
+        position: relative;
+        min-height: 430px;
+        border-radius: 8px;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        background:
+          linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.03)),
+          #102033;
+      }
+
+      .map-grid {
+        position: absolute;
+        inset: 0;
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+        background-size: 42px 42px;
+      }
+
+      .route-map {
+        position: absolute;
+        inset: 18px 18px 96px;
+        width: calc(100% - 36px);
+        height: calc(100% - 114px);
+      }
+
+      .route-edge {
+        fill: none;
+        stroke: rgba(255, 255, 255, 0.28);
+        stroke-width: 8;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .route-edge.active {
+        stroke: #73b6ff;
+        stroke-width: 10;
+        filter: drop-shadow(0 0 8px rgba(115, 182, 255, 0.5));
+      }
+
+      .route-edge.avoid {
+        stroke: #f7d96a;
+        stroke-width: 8;
+        stroke-dasharray: 14 14;
+        filter: drop-shadow(0 0 7px rgba(247, 217, 106, 0.45));
+      }
+
+      .route-node {
+        fill: #102033;
+        stroke: #ffffff;
+        stroke-width: 7;
+      }
+
+      .route-node.station {
+        stroke: #46d39a;
+      }
+
+      .route-node.locked {
+        fill: #231a00;
+        stroke: #f7d96a;
+        filter: drop-shadow(0 0 12px rgba(247, 217, 106, 0.75));
+      }
+
+      .route-label,
+      .vehicle-label {
+        fill: rgba(255, 255, 255, 0.82);
+        font-size: 18px;
+        font-weight: 800;
+      }
+
+      .route-label.muted {
+        fill: rgba(255, 255, 255, 0.58);
+        font-size: 16px;
+        font-weight: 700;
+      }
+
+      .vehicle-icon {
+        filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.34));
+      }
+
+      .vehicle-icon.waiting {
+        opacity: 0.88;
+      }
+
+      .lock-panel {
+        position: absolute;
+        right: 18px;
+        bottom: 18px;
+        width: min(260px, calc(100% - 36px));
+        padding: 16px;
+        border-radius: 8px;
+        background: rgba(4, 16, 27, 0.78);
+        border: 1px solid rgba(255, 255, 255, 0.16);
+      }
+
+      .lock-panel h3 {
+        margin: 0 0 10px;
+        color: #ffffff;
+        font-size: 16px;
+      }
+
+      .lock-panel p {
+        margin: 0;
+        color: rgba(255, 255, 255, 0.72);
+        font-size: 13px;
+      }
+
+      .workflow-list {
+        display: grid;
+        gap: 12px;
+      }
+
+      .workflow-step {
+        display: grid;
+        grid-template-columns: 42px minmax(0, 1fr);
+        gap: 14px;
+        align-items: start;
+        padding: 18px;
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.09);
+        border: 1px solid rgba(255, 255, 255, 0.16);
+      }
+
+      .step-num {
+        width: 42px;
+        height: 42px;
+        display: grid;
+        place-items: center;
+        border-radius: 8px;
+        color: #231a00;
+        background: #f7d96a;
+        font-weight: 900;
+      }
+
+      .workflow-step h3 {
+        margin: 0 0 4px;
+        color: #ffffff;
+        font-size: 17px;
+      }
+
+      .workflow-step p {
+        margin: 0;
+        color: rgba(255, 255, 255, 0.76);
+        font-size: 14px;
+      }
+
+      .video-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+      }
+
+      .video-card {
+        overflow: hidden;
+      }
+
+      .video-frame {
+        aspect-ratio: 16 / 9;
+        background: #0f172a;
+      }
+
+      .video-frame video {
+        width: 100%;
+        height: 100%;
+        display: block;
+        object-fit: cover;
+      }
+
+      .video-body {
+        padding: 24px;
+      }
+
+      .video-label {
+        display: inline-flex;
+        align-items: center;
+        min-height: 28px;
+        padding: 4px 10px;
+        border-radius: 6px;
+        color: #231a00;
+        background: #f5d65f;
+        font-size: 12px;
+        font-weight: 900;
+      }
+
+      .video-body h3 {
+        margin: 16px 0 8px;
+        color: var(--ink);
+        font-size: 21px;
+        line-height: 1.32;
+      }
+
+      .video-body p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .matrix {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+      }
+
+      .matrix-col {
+        border-radius: 8px;
+        border: 1px solid var(--line);
+        background: #ffffff;
+        overflow: hidden;
+      }
+
+      .matrix-title {
+        padding: 20px 22px;
+        color: #ffffff;
+        background: var(--purple);
+      }
+
+      .matrix-title.extend {
+        color: #231a00;
+        background: #f0c638;
+      }
+
+      .matrix-title h3 {
+        margin: 0;
+        font-size: 20px;
+      }
+
+      .matrix-title p {
+        margin: 6px 0 0;
+        opacity: 0.78;
+        font-size: 13px;
+      }
+
+      .matrix-list {
+        display: grid;
+      }
+
+      .matrix-item {
+        display: grid;
+        grid-template-columns: minmax(120px, 0.4fr) minmax(0, 1fr);
+        gap: 18px;
+        padding: 18px 22px;
+        border-top: 1px solid var(--line);
+      }
+
+      .matrix-item strong {
+        color: var(--ink);
+        font-size: 15px;
+      }
+
+      .matrix-item span {
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .scenario-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 16px;
+      }
+
+      .scenario-card {
+        min-height: 198px;
+        padding: 24px;
+      }
+
+      .scenario-label {
+        display: inline-flex;
+        min-height: 28px;
+        align-items: center;
+        padding: 4px 10px;
+        color: #ffffff;
+        border-radius: 6px;
+        background: var(--blue);
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      .enhance-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+      }
+
+      .enhance-card {
+        padding: 24px;
+        min-height: 246px;
+      }
+
+      .cta {
+        padding: 76px 0;
+        color: #ffffff;
+        background: linear-gradient(135deg, #5e1d79, #82620d 58%, #0f6a53);
+      }
+
+      .cta-inner {
+        width: min(1180px, calc(100% - 40px));
+        max-width: calc(100% - 40px);
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(220px, 0.32fr);
+        gap: 42px;
+        align-items: center;
+      }
+
+      .cta h2 {
+        color: #ffffff;
+      }
+
+      .cta p {
+        max-width: 760px;
+        color: rgba(255, 255, 255, 0.82);
+        margin: 16px 0 0;
+      }
+
+      .cta-logo {
+        padding: 14px;
+        border-radius: 8px;
+        background: #ffffff;
+      }
+
+      .footer {
+        padding: 30px 0;
+        background: #ffffff;
+        border-top: 1px solid var(--line);
+      }
+
+      .footer-inner {
+        width: min(1180px, calc(100% - 40px));
+        max-width: calc(100% - 40px);
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .footer-logo {
+        width: 120px;
+        height: 48px;
+        object-fit: contain;
+        object-position: left center;
+        background: #ffffff;
+      }
+
+      @media (max-width: 980px) {
+        .nav {
+          min-height: auto;
+          padding: 12px 0;
+          align-items: flex-start;
+          flex-direction: column;
+        }
+
+        .nav-links {
+          width: 100%;
+          justify-content: flex-start;
+          overflow-x: auto;
+          padding-bottom: 4px;
+        }
+
+        .hero {
+          min-height: auto;
+        }
+
+        .hero-inner {
+          padding: 72px 0 100px;
+        }
+
+        .hero-metrics,
+        .feature-grid,
+        .capability-grid,
+        .scenario-grid,
+        .enhance-grid,
+        .video-grid,
+        .arch-row {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .section-head,
+        .workflow,
+        .matrix,
+        .cta-inner {
+          grid-template-columns: 1fr;
+        }
+
+      }
+
+      @media (max-width: 640px) {
+        .nav,
+        .container,
+        .hero-inner,
+        .footer-inner,
+        .cta-inner {
+          width: min(100% - 28px, 1180px);
+        }
+
+        .brand {
+          min-width: 0;
+          width: 100%;
+        }
+
+        .brand-logo {
+          width: 136px;
+          height: 54px;
+        }
+
+        .brand-subtitle {
+          white-space: normal;
+        }
+
+        .nav-links {
+          gap: 14px;
+          font-size: 13px;
+        }
+
+        h1 {
+          font-size: 44px;
+        }
+
+        h2 {
+          font-size: 27px;
+        }
+
+        .hero-copy {
+          font-size: 17px;
+        }
+
+        .hero-metrics,
+        .feature-grid,
+        .capability-grid,
+        .scenario-grid,
+        .enhance-grid,
+        .video-grid,
+        .arch-row {
+          grid-template-columns: 1fr;
+        }
+
+        .section {
+          padding: 62px 0;
+        }
+
+        .architecture {
+          padding: 18px;
+        }
+
+        .map-visual {
+          min-height: 340px;
+        }
+
+        .matrix-item {
+          grid-template-columns: 1fr;
+          gap: 6px;
+        }
+
+        .footer-inner {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+      }
+
+      @media print {
+        .topbar {
+          position: static;
+        }
+
+        .section,
+        .cta {
+          padding: 40px 0;
+        }
+
+        .hero {
+          min-height: auto;
+        }
+
+        .feature-card,
+        .capability-card,
+        .scenario-card,
+        .enhance-card,
+        .matrix-col,
+        .architecture {
+          box-shadow: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <header class="topbar">
+        <nav class="nav" aria-label="页面导航">
+          <a class="brand" href="#top">
+            <img class="brand-logo" src="docs/assets/systech-logo.png" alt="士腾科技 Logo" />
+            <span class="brand-text">
+              <span class="brand-title">士腾 RCS</span>
+              <span class="brand-subtitle">AGV / AMR 多车调度控制平台</span>
+            </span>
+          </a>
+          <div class="nav-links">
+            <a href="#value">产品价值</a>
+            <a href="#architecture">系统架构</a>
+            <a href="#capabilities">核心功能</a>
+            <a href="#workflow">调度闭环</a>
+            <a href="#demos">演示视频</a>
+            <a href="#extensions">扩展能力</a>
+          </div>
+        </nav>
+      </header>
+
+      <main id="top">
+        <section class="hero">
+          <div class="hero-inner">
+            <p class="eyebrow">面向智能物流现场的 RCS 调度平台</p>
+            <h1>士腾 RCS</h1>
+            <p class="hero-copy">
+              面向 AGV / AMR 车队的多车调度控制平台，统一承载车辆接入、地图建模、路径规划、交通管制、订单调度、实时看板与仿真验证，帮助客户构建稳定、可视、可扩展的厂内物流调度中枢。
+            </p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="#capabilities">查看核心能力</a>
+              <a class="btn btn-secondary" href="#architecture">了解系统架构</a>
+            </div>
+            <div class="hero-metrics" aria-label="产品能力摘要">
+              <div class="metric">
+                <strong>VDA5050</strong>
+                <span>基于 MQTT 的标准化 AGV 通信与动作下发</span>
+              </div>
+              <div class="metric">
+                <strong>SLAM / 惯导</strong>
+                <span>覆盖典型地图建模、点位/路段编辑与运行监控场景</span>
+              </div>
+              <div class="metric">
+                <strong>多车协同</strong>
+                <span>路径规划、锁点控制、避让调度和订单续接</span>
+              </div>
+              <div class="metric">
+                <strong>仿真验证</strong>
+                <span>虚拟 AGV、随机订单和地图模拟支撑项目交付</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="value">
+          <div class="container">
+            <div class="section-head">
+              <div>
+                <p class="section-kicker">PRODUCT VALUE</p>
+                <h2>把现场搬运任务转化为可调度、可监控、可追溯的运行体系</h2>
+              </div>
+              <p class="lead">
+                RCS 将车辆、地图、订单、路径和交通资源统一纳管，既满足调度员日常操作，也支撑 WMS / MES / WCS 等外部系统集成。
+              </p>
+            </div>
+
+            <div class="feature-grid">
+              <article class="feature-card">
+                <div class="card-icon">01</div>
+                <h3>标准接入</h3>
+                <p>以 VDA5050 + MQTT 为通信基础，统一接收车辆状态、位置、电量、连接与动作执行信息。</p>
+              </article>
+              <article class="feature-card">
+                <div class="card-icon green">02</div>
+                <h3>智能调度</h3>
+                <p>通过路径规划、点位锁定、安全半径、交通避让和任务续接，支撑多车稳定协同运行。</p>
+              </article>
+              <article class="feature-card">
+                <div class="card-icon blue">03</div>
+                <h3>实时可视</h3>
+                <p>地图看板实时展示 AGV、订单、锁点、避让关系与运行状态，异常现场更容易定位。</p>
+              </article>
+              <article class="feature-card">
+                <div class="card-icon gold">04</div>
+                <h3>交付验证</h3>
+                <p>内置虚拟 AGV、地图模拟和随机 WMS 订单，支持项目前期演示、调试和交付前验证。</p>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section class="section alt" id="architecture">
+          <div class="container">
+            <div class="section-head">
+              <div>
+                <p class="section-kicker">SYSTEM ARCHITECTURE</p>
+                <h2>前端、网关、调度核心、通信协议与仿真服务分层解耦</h2>
+              </div>
+              <p class="lead">
+                系统采用前后端分离和微服务转发架构，对外提供 HTTP API、SSE 实时推送与 Swagger 文档，对内通过 TCP 服务承载核心调度能力。
+              </p>
+            </div>
+
+            <div class="architecture">
+              <div class="arch-row">
+                <div class="arch-node">
+                  <h3>WMS / MES / WCS</h3>
+                  <p>外部业务系统下发搬运、补料、入库、出库等任务。</p>
+                </div>
+                <div class="arch-node">
+                  <h3>Web 网关</h3>
+                  <p>HTTP API、SSE、文件上传、Swagger 文档与跨域访问。</p>
+                </div>
+                <div class="arch-node primary">
+                  <h3>调度核心</h3>
+                  <p>订单分配、地图图模型、路径规划、交通锁点、状态处理。</p>
+                </div>
+                <div class="arch-node">
+                  <h3>MQTT / VDA5050</h3>
+                  <p>车辆连接、状态、可视化位置、订单与即时动作通信。</p>
+                </div>
+                <div class="arch-node">
+                  <h3>AGV / AMR</h3>
+                  <p>多车型、多控制器、多导航模式的移动机器人车队。</p>
+                </div>
+              </div>
+              <div class="arch-tags">
+                <span class="tag core">Vue 3 管理端</span>
+                <span class="tag core">NestJS 调度核心</span>
+                <span class="tag core">TypeORM 数据持久化</span>
+                <span class="tag core">SSE 实时看板</span>
+                <span class="tag core">虚拟 AGV 仿真</span>
+                <span class="tag extend">企业级 MQTT 可替换</span>
+                <span class="tag extend">高可用部署可扩展</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="capabilities">
+          <div class="container">
+            <div class="section-head">
+              <div>
+                <p class="section-kicker">CORE CAPABILITIES</p>
+                <h2>覆盖 RCS 从车辆接入到现场运营的核心功能</h2>
+              </div>
+              <p class="lead">
+                士腾 RCS 已形成车辆、车型、Action、地图、路径、订单、看板、货架、充电停车和仿真的完整主链路。
+              </p>
+            </div>
+
+            <div class="capability-grid">
+              <article class="capability-card">
+                <div class="capability-top">
+                  <span class="pill">核心能力</span>
+                  <img src="docs/assets/agv-working.svg" alt="" />
+                </div>
+                <h3>AGV 接入与车辆管理</h3>
+                <p>统一管理车辆台账、车型参数、地图绑定、启停状态和关键控制操作。</p>
+                <ul>
+                  <li>VDA5050 v2、MQTT、连接状态与心跳检测</li>
+                  <li>车辆创建、批量创建、启停、删除保护和作废恢复</li>
+                  <li>电量阈值、速度、载重、尺寸、安全半径和坐标误差配置</li>
+                </ul>
+              </article>
+
+              <article class="capability-card">
+                <div class="capability-top">
+                  <span class="pill">核心能力</span>
+                  <img src="docs/assets/agv.svg" alt="" />
+                </div>
+                <h3>地图建模与可视化编辑</h3>
+                <p>支持惯导和 SLAM 地图，完成点位、路段、业务点位和运行图模型维护。</p>
+                <ul>
+                  <li>地图创建、编辑、启停、预览、文件上传和静态访问</li>
+                  <li>行驶点、充电点、工位、停车点、交通管制点配置</li>
+                  <li>点位/路段批量操作、曲线路段、交叉点、速度和权重管理</li>
+                </ul>
+              </article>
+
+              <article class="capability-card">
+                <div class="capability-top">
+                  <span class="pill">核心能力</span>
+                  <span class="card-icon blue">A*</span>
+                </div>
+                <h3>路径规划与交通控制</h3>
+                <p>通过图搜索、锁点和避让机制，让多车在同一地图中稳定协同。</p>
+                <ul>
+                  <li>A* 路径规划、动态路段权重、路径续接和等待处理</li>
+                  <li>点位锁定、安全半径锁定、交叉点锁定和点位释放</li>
+                  <li>避让关系、避让订单和阻塞缓解机制</li>
+                </ul>
+              </article>
+
+              <article class="capability-card">
+                <div class="capability-top">
+                  <span class="pill">核心能力</span>
+                  <span class="card-icon green">W</span>
+                </div>
+                <h3>订单调度与 WMS 集成</h3>
+                <p>承接人工任务和外部系统任务，并转化为 AGV 可执行的标准订单。</p>
+                <ul>
+                  <li>用户订单、WMS 订单、系统订单和订单复制</li>
+                  <li>指定 AGV 或按车型自动分配，支持优先级调度</li>
+                  <li>前置订单、避让订单、充电订单、停车订单和状态流转</li>
+                </ul>
+              </article>
+
+              <article class="capability-card">
+                <div class="capability-top">
+                  <span class="pill">核心能力</span>
+                  <span class="card-icon gold">P</span>
+                </div>
+                <h3>Action 动作编排</h3>
+                <p>把取放、充电、暂停、定位、等待触发等现场动作编排进任务流程。</p>
+                <ul>
+                  <li>标准 VDA5050 Action 与自定义 Action 并存</li>
+                  <li>动作参数规则、阻塞类型、适用范围和执行历史</li>
+                  <li>支持即时动作、点位动作、路段动作、起终点动作</li>
+                </ul>
+              </article>
+
+              <article class="capability-card">
+                <div class="capability-top">
+                  <span class="pill">核心能力</span>
+                  <span class="card-icon">E</span>
+                </div>
+                <h3>自动充电与自动停车</h3>
+                <p>基于电量、车辆状态和点位资源自动生成充电或停车任务。</p>
+                <ul>
+                  <li>低电量判断、自动充电订单和指定充电点</li>
+                  <li>充电动作编排和充电中接单控制</li>
+                  <li>空闲停车、指定停车点和停车点优先级</li>
+                </ul>
+              </article>
+
+              <article class="capability-card">
+                <div class="capability-top">
+                  <span class="pill">核心能力</span>
+                  <span class="card-icon blue">D</span>
+                </div>
+                <h3>实时看板与历史回溯</h3>
+                <p>调度员可以实时查看车辆、订单、地图和交通状态，并进行异常复盘。</p>
+                <ul>
+                  <li>地图看板、AGV 列表、订单统计和状态图表</li>
+                  <li>SSE 推送 state、visualization、connection 和实时看板数据</li>
+                  <li>锁点、避让信息、历史轨迹和路径回溯</li>
+                </ul>
+              </article>
+
+              <article class="capability-card">
+                <div class="capability-top">
+                  <span class="pill">交付支撑</span>
+                  <span class="card-icon green">S</span>
+                </div>
+                <h3>仿真验证与演示</h3>
+                <p>在没有真实车辆或项目早期阶段，也能验证地图、调度和订单链路。</p>
+                <ul>
+                  <li>虚拟 AGV 启停、批量模拟和状态发布</li>
+                  <li>随机 WMS 订单、随机订单配置和地图模拟</li>
+                  <li>基于 MQTT 的 VDA5050 仿真闭环</li>
+                </ul>
+              </article>
+
+              <article class="capability-card">
+                <div class="capability-top">
+                  <span class="pill">基础能力</span>
+                  <span class="card-icon gold">O</span>
+                </div>
+                <h3>开放接口与基础配置</h3>
+                <p>为前端管理端、外部系统、现场对象和交付工具提供统一支撑。</p>
+                <ul>
+                  <li>HTTP API、TCP 微服务转发、Swagger 文档和 CORS</li>
+                  <li>地图文件、货架台账、工位和动作参数基础配置</li>
+                  <li>用户登录、权限枚举、前端菜单权限和日志查询基础</li>
+                </ul>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section class="section deep" id="workflow">
+          <div class="container">
+            <div class="workflow">
+              <div>
+                <p class="section-kicker">RUNNING LOOP</p>
+                <h2>从任务下发到车辆执行，形成可解释的调度闭环</h2>
+                <p class="lead">
+                  RCS 将外部任务转为路径、点位、路段和现场动作，运行中持续维护车辆状态、锁点、避让关系和订单进度，让现场调度可视、可控、可复盘。
+                </p>
+                <div class="map-visual" aria-label="RCS 地图调度示意">
+                  <div class="map-grid"></div>
+                  <svg class="route-map" viewBox="0 0 760 320" role="img" aria-label="点位路段拓扑、任务路径、锁定点位和避让车辆示意" xmlns:xlink="http://www.w3.org/1999/xlink">
+                    <path class="route-edge" d="M70 160 H220 H370 H520 H690" />
+                    <path class="route-edge" d="M370 160 V60" />
+                    <path class="route-edge" d="M370 160 V270" />
+                    <path class="route-edge" d="M220 160 V270 H370" />
+                    <path class="route-edge" d="M520 160 V270 H370" />
+                    <path class="route-edge active" d="M70 160 H220 H370 H520 H690" />
+                    <path class="route-edge avoid" d="M370 270 V160 V60" />
+
+                    <circle class="route-node station" cx="70" cy="160" r="15" />
+                    <circle class="route-node" cx="220" cy="160" r="15" />
+                    <circle class="route-node locked" cx="370" cy="160" r="18" />
+                    <circle class="route-node" cx="520" cy="160" r="15" />
+                    <circle class="route-node station" cx="690" cy="160" r="15" />
+                    <circle class="route-node" cx="370" cy="60" r="14" />
+                    <circle class="route-node station" cx="370" cy="270" r="14" />
+                    <circle class="route-node" cx="220" cy="270" r="14" />
+                    <circle class="route-node" cx="520" cy="270" r="14" />
+
+                    <text class="route-label muted" x="45" y="130">起点</text>
+                    <text class="route-label muted" x="340" y="130">锁定交叉点</text>
+                    <text class="route-label muted" x="658" y="130">终点</text>
+                    <text class="route-label muted" x="392" y="66">避让点</text>
+                    <text class="route-label muted" x="392" y="276">等待点</text>
+
+                    <g transform="translate(294 160)">
+                      <image
+                        class="vehicle-icon"
+                        href="docs/assets/agv.svg"
+                        xlink:href="docs/assets/agv.svg"
+                        x="-34"
+                        y="-31"
+                        width="68"
+                        height="61"
+                      />
+                      <text class="vehicle-label" x="-32" y="48">AGV-01</text>
+                    </g>
+                    <g transform="translate(370 228) rotate(-90)">
+                      <image
+                        class="vehicle-icon waiting"
+                        href="docs/assets/agv.svg"
+                        xlink:href="docs/assets/agv.svg"
+                        x="-34"
+                        y="-31"
+                        width="68"
+                        height="61"
+                      />
+                    </g>
+                    <text class="vehicle-label" x="394" y="236">AGV-02</text>
+                  </svg>
+                  <div class="lock-panel">
+                    <h3>实时交通状态</h3>
+                    <p>蓝色为当前订单路径，橙色为避让/等待路径，黄色点位表示当前锁定的交通资源。</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="workflow-list">
+                <div class="workflow-step">
+                  <span class="step-num">1</span>
+                  <div>
+                    <h3>地图与车辆准备</h3>
+                    <p>维护 SLAM / 惯导地图、点位/路段拓扑、车型参数、车辆台账和运行阈值。</p>
+                  </div>
+                </div>
+                <div class="workflow-step">
+                  <span class="step-num">2</span>
+                  <div>
+                    <h3>订单生成与分配</h3>
+                    <p>支持人工创建、WMS 接入、路线编辑和系统自动任务，按车辆状态和任务优先级分配。</p>
+                  </div>
+                </div>
+                <div class="workflow-step">
+                  <span class="step-num">3</span>
+                  <div>
+                    <h3>路径规划与交通控制</h3>
+                    <p>基于地图图模型规划路径，结合锁点、安全半径和避让订单降低冲突风险。</p>
+                  </div>
+                </div>
+                <div class="workflow-step">
+                  <span class="step-num">4</span>
+                  <div>
+                    <h3>执行监控与异常处理</h3>
+                    <p>实时接收车辆状态、动作执行、连接状态和可视化位置，订单全过程可追踪。</p>
+                  </div>
+                </div>
+                <div class="workflow-step">
+                  <span class="step-num">5</span>
+                  <div>
+                    <h3>历史回溯与持续优化</h3>
+                    <p>通过订单详情、轨迹回放、日志与统计数据复盘运行瓶颈，持续优化现场效率。</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="demos">
+          <div class="container">
+            <div class="section-head">
+              <div>
+                <p class="section-kicker">SIMULATION DEMO</p>
+                <h2>用仿真视频展示多车调度与避让逻辑</h2>
+              </div>
+              <p class="lead">
+                视频展示了系统在多车运行、路径冲突、点位占用和动态避让场景中的调度表现，可用于方案交流、方案评审和项目交付前验证。
+              </p>
+            </div>
+
+            <div class="video-grid">
+              <article class="video-card">
+                <div class="video-frame">
+                  <video
+                    controls
+                    preload="metadata"
+                    playsinline
+                    src="docs/assets/rcs-hundred-agv-dispatch.mp4"
+                  >
+                    当前浏览器不支持视频播放。
+                  </video>
+                </div>
+                <div class="video-body">
+                  <span class="video-label">百车调度仿真</span>
+                  <h3>验证大规模订单与车辆协同压力下的调度链路</h3>
+                  <p>
+                    通过百车仿真观察车辆分布、路径运行、任务压力和调度节奏，辅助评估地图容量、交通瓶颈和项目规模化部署策略。
+                  </p>
+                </div>
+              </article>
+
+              <article class="video-card">
+                <div class="video-frame">
+                  <video
+                    controls
+                    preload="metadata"
+                    playsinline
+                    src="docs/assets/rcs-avoidance-demo.mp4"
+                  >
+                    当前浏览器不支持视频播放。
+                  </video>
+                </div>
+                <div class="video-body">
+                  <span class="video-label">避让逻辑演示</span>
+                  <h3>展示路径冲突识别、让行调度与通行恢复</h3>
+                  <p>
+                    在车辆运行过程中识别潜在冲突，通过锁点、安全半径和避让订单协调车辆通行，降低拥堵和死锁风险。
+                  </p>
+                </div>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section class="section alt">
+          <div class="container">
+            <div class="section-head">
+              <div>
+                <p class="section-kicker">CAPABILITY MATRIX</p>
+                <h2>清晰区分当前核心能力与项目增强能力</h2>
+              </div>
+              <p class="lead">
+                产品以已形成闭环的调度主链路作为当前核心能力，并可围绕安全、报表、高可用和高级交通管制进行项目化增强。
+              </p>
+            </div>
+
+            <div class="matrix">
+              <div class="matrix-col">
+                <div class="matrix-title">
+                  <h3>当前核心能力</h3>
+                  <p>适合在方案中直接介绍的产品主链路</p>
+                </div>
+                <div class="matrix-list">
+                  <div class="matrix-item">
+                    <strong>车辆接入</strong>
+                    <span>VDA5050、MQTT、状态监听、即时动作和离线检测。</span>
+                  </div>
+                  <div class="matrix-item">
+                    <strong>地图调度</strong>
+                    <span>SLAM / 惯导地图、点位/路段编辑、图模型加载和路径规划。</span>
+                  </div>
+                  <div class="matrix-item">
+                    <strong>订单执行</strong>
+                    <span>用户订单、WMS 订单、前置订单、避让订单、充电停车订单。</span>
+                  </div>
+                  <div class="matrix-item">
+                    <strong>现场对象</strong>
+                    <span>货架台账、工位配置、动作参数和载具扩展基础数据。</span>
+                  </div>
+                  <div class="matrix-item">
+                    <strong>实时运营</strong>
+                    <span>看板、SSE 推送、订单统计、锁点避让和轨迹回溯。</span>
+                  </div>
+                  <div class="matrix-item">
+                    <strong>交付验证</strong>
+                    <span>虚拟 AGV、地图模拟、随机 WMS 订单和仿真闭环。</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="matrix-col">
+                <div class="matrix-title extend">
+                  <h3>项目增强能力</h3>
+                  <p>面向生产项目和大型客户的增强方向</p>
+                </div>
+                <div class="matrix-list">
+                  <div class="matrix-item">
+                    <strong>安全权限</strong>
+                    <span>后端 RBAC、JWT、密码策略、SSO、MFA 和 API 签名。</span>
+                  </div>
+                  <div class="matrix-item">
+                    <strong>告警运维</strong>
+                    <span>告警中心、通知渠道、故障码字典和远程诊断包。</span>
+                  </div>
+                  <div class="matrix-item">
+                    <strong>高级调度</strong>
+                    <span>最优车辆分配、任务模板、多点任务、任务合并、超时策略和暂停恢复。</span>
+                  </div>
+                  <div class="matrix-item">
+                    <strong>交通区域</strong>
+                    <span>会车区、窄道、单行区、动态封路和交叉口通行权。</span>
+                  </div>
+                  <div class="matrix-item">
+                    <strong>平台化</strong>
+                    <span>高可用部署、状态恢复、地图版本、报表导出和多站点管理。</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="container">
+            <div class="section-head">
+              <div>
+                <p class="section-kicker">APPLICATION SCENARIOS</p>
+                <h2>适用于多类厂内物流与柔性制造场景</h2>
+              </div>
+              <p class="lead">
+                系统能力围绕多车协同、路径可控、任务可追踪和现场可视构建，可按行业现场进行策略扩展。
+              </p>
+            </div>
+
+            <div class="scenario-grid">
+              <article class="scenario-card">
+                <span class="scenario-label">仓储搬运</span>
+                <h3>入库、出库、移库、补货</h3>
+                <p>对接 WMS 下发搬运任务，RCS 负责任务分配、路径规划和车辆执行监控。</p>
+              </article>
+              <article class="scenario-card">
+                <span class="scenario-label">产线配送</span>
+                <h3>产线补料与空箱回收</h3>
+                <p>通过任务优先级、站点动作和自动停车保持产线物流连续运行。</p>
+              </article>
+              <article class="scenario-card">
+                <span class="scenario-label">库区转运</span>
+                <h3>跨区域多车协同</h3>
+                <p>利用锁点、避让和地图看板降低路径冲突，提升库区转运效率。</p>
+              </article>
+              <article class="scenario-card">
+                <span class="scenario-label">项目交付</span>
+                <h3>仿真演示与验收验证</h3>
+                <p>通过虚拟 AGV、模拟地图和随机订单，在真实车辆到场前完成方案验证。</p>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section class="section alt" id="extensions">
+          <div class="container">
+            <div class="section-head">
+              <div>
+                <p class="section-kicker">EXTENSIBILITY</p>
+                <h2>面向企业级项目的可扩展能力</h2>
+              </div>
+              <p class="lead">
+                针对大型工厂、集团化项目和高安全等级场景，RCS 可以围绕安全、集成、运维、数据和商业化能力继续增强。
+              </p>
+            </div>
+
+            <div class="enhance-grid">
+              <article class="enhance-card">
+                <h3>企业级安全</h3>
+                <p>强化身份认证、接口安全和操作审计。</p>
+                <ul>
+                  <li>后端 RBAC、数据范围和角色持久化</li>
+                  <li>JWT / Session、API 签名、IP 白名单和限流</li>
+                  <li>密码策略、SSO / LDAP / OAuth2 和 MFA</li>
+                </ul>
+              </article>
+              <article class="enhance-card">
+                <h3>运维告警</h3>
+                <p>把异常从“可看到”升级为“可处置”。</p>
+                <ul>
+                  <li>离线、低电量、任务失败、交通阻塞告警</li>
+                  <li>短信、邮件、企业微信、钉钉、Webhook 通知</li>
+                  <li>故障码字典、诊断包和系统健康监控</li>
+                </ul>
+              </article>
+              <article class="enhance-card">
+                <h3>开放集成</h3>
+                <p>面向客户系统形成标准接口边界。</p>
+                <ul>
+                  <li>下单、取消、查询、回调、点位查询 API</li>
+                  <li>幂等、重试、外部任务号和接口版本管理</li>
+                  <li>REST、MQTT、WebSocket、OPC UA 等适配方式</li>
+                </ul>
+              </article>
+              <article class="enhance-card">
+                <h3>高级交通</h3>
+                <p>适配更复杂、更密集的现场运行环境。</p>
+                <ul>
+                  <li>会车区、窄道、限速区、单行区和排队区</li>
+                  <li>动态封路、交叉口通行权和独立死锁检测</li>
+                  <li>动态障碍物、门禁、电梯、提升机联动</li>
+                </ul>
+              </article>
+              <article class="enhance-card">
+                <h3>能源与维护</h3>
+                <p>提升车辆可用率和设备管理效率。</p>
+                <ul>
+                  <li>充电桩台账、充电排队和机会充电</li>
+                  <li>电池健康、充电异常处理和能耗统计</li>
+                  <li>设备生命周期、保养计划和维修记录</li>
+                </ul>
+              </article>
+              <article class="enhance-card">
+                <h3>报表与平台化</h3>
+                <p>支撑管理分析和多项目运营。</p>
+                <ul>
+                  <li>任务效率、AGV 利用率、路径热力图和 SLA 报表</li>
+                  <li>地图版本、导入导出、发布审批、备份恢复和高可用部署</li>
+                  <li>多站点、多租户、License、白标、多语言和运营大屏</li>
+                </ul>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section class="cta">
+          <div class="cta-inner">
+            <div>
+              <h2>以标准协议接入，以调度闭环交付现场价值</h2>
+              <p>
+                士腾 RCS 聚焦 AGV / AMR 车队的统一调度和可视化运营，可根据客户现场规模、车辆类型、外部系统和生产安全要求进行项目化配置与扩展。
+              </p>
+            </div>
+            <div class="cta-logo">
+              <img src="docs/assets/systech-logo.png" alt="士腾科技 Logo" />
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <div class="footer-inner">
+          <img class="footer-logo" src="docs/assets/systech-logo.png" alt="士腾科技 Logo" />
+          <span>士腾 RCS 功能介绍</span>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>
