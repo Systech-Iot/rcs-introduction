@@ -371,6 +371,16 @@
         font-size: 18px;
       }
 
+      .card-icon svg {
+        width: 26px;
+        height: 26px;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
       .card-icon.green {
         background: var(--green);
       }
@@ -1229,7 +1239,15 @@
               <article class="capability-card">
                 <div class="capability-top">
                   <span class="pill">核心能力</span>
-                  <span class="card-icon blue">A*</span>
+                  <span class="card-icon blue" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" focusable="false">
+                      <circle cx="5" cy="18" r="2.25"></circle>
+                      <circle cx="18" cy="5" r="2.25"></circle>
+                      <path d="M7.2 17.2c4.4-1.2 7.4-4.2 8.7-9.1"></path>
+                      <rect x="12" y="13" width="7" height="6" rx="1.5"></rect>
+                      <path d="M13.8 13v-1.1a1.8 1.8 0 0 1 3.6 0V13"></path>
+                    </svg>
+                  </span>
                 </div>
                 <h3>路径规划与交通控制</h3>
                 <p>通过图搜索、锁点和避让机制，让多车在同一地图中稳定协同。</p>
@@ -1243,7 +1261,17 @@
               <article class="capability-card">
                 <div class="capability-top">
                   <span class="pill">核心能力</span>
-                  <span class="card-icon green">W</span>
+                  <span class="card-icon green" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" focusable="false">
+                      <rect x="5" y="3.5" width="14" height="17" rx="2"></rect>
+                      <path d="M9 8h6"></path>
+                      <path d="M9 12h6"></path>
+                      <path d="M9 16h3"></path>
+                      <path d="M3 12h2"></path>
+                      <path d="M19 12h2"></path>
+                      <path d="M17.5 10.5 19 12l-1.5 1.5"></path>
+                    </svg>
+                  </span>
                 </div>
                 <h3>订单调度与 WMS 集成</h3>
                 <p>承接人工任务和外部系统任务，并转化为 AGV 可执行的标准订单。</p>
@@ -1257,7 +1285,16 @@
               <article class="capability-card">
                 <div class="capability-top">
                   <span class="pill">核心能力</span>
-                  <span class="card-icon gold">P</span>
+                  <span class="card-icon gold" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" focusable="false">
+                      <rect x="3.5" y="4" width="6" height="5" rx="1.2"></rect>
+                      <rect x="14.5" y="4" width="6" height="5" rx="1.2"></rect>
+                      <rect x="9" y="15" width="6" height="5" rx="1.2"></rect>
+                      <path d="M9.5 6.5h5"></path>
+                      <path d="M6.5 9v2.5a3.5 3.5 0 0 0 3.5 3.5h2"></path>
+                      <path d="M17.5 9v2.5a3.5 3.5 0 0 1-3.5 3.5h-2"></path>
+                    </svg>
+                  </span>
                 </div>
                 <h3>Action 动作编排</h3>
                 <p>把取放、充电、暂停、定位、等待触发等现场动作编排进任务流程。</p>
@@ -1271,7 +1308,14 @@
               <article class="capability-card">
                 <div class="capability-top">
                   <span class="pill">核心能力</span>
-                  <span class="card-icon">E</span>
+                  <span class="card-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" focusable="false">
+                      <rect x="3.5" y="8" width="15" height="8" rx="2"></rect>
+                      <path d="M18.5 11h2v2h-2"></path>
+                      <path d="m11.5 7-3 5h4l-2 5"></path>
+                      <path d="M6 19h10"></path>
+                    </svg>
+                  </span>
                 </div>
                 <h3>自动充电与自动停车</h3>
                 <p>基于电量、车辆状态和点位资源自动生成充电或停车任务。</p>
@@ -1285,7 +1329,15 @@
               <article class="capability-card">
                 <div class="capability-top">
                   <span class="pill">核心能力</span>
-                  <span class="card-icon blue">D</span>
+                  <span class="card-icon blue" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" focusable="false">
+                      <rect x="3" y="4" width="18" height="13" rx="2"></rect>
+                      <path d="M8 20h8"></path>
+                      <path d="M12 17v3"></path>
+                      <path d="M7 13l3-3 2 2 4-5"></path>
+                      <path d="M16 7h2v2"></path>
+                    </svg>
+                  </span>
                 </div>
                 <h3>实时看板与历史回溯</h3>
                 <p>调度员可以实时查看车辆、订单、地图和交通状态，并进行异常复盘。</p>
@@ -1299,7 +1351,16 @@
               <article class="capability-card">
                 <div class="capability-top">
                   <span class="pill">交付支撑</span>
-                  <span class="card-icon green">S</span>
+                  <span class="card-icon green" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" focusable="false">
+                      <rect x="4" y="5" width="16" height="11" rx="2"></rect>
+                      <path d="M8 20h8"></path>
+                      <path d="M12 16v4"></path>
+                      <path d="m10 8.5 4 2.5-4 2.5z"></path>
+                      <path d="M6.5 3.5 5 2"></path>
+                      <path d="M17.5 3.5 19 2"></path>
+                    </svg>
+                  </span>
                 </div>
                 <h3>仿真验证与演示</h3>
                 <p>在没有真实车辆或项目早期阶段，也能验证地图、调度和订单链路。</p>
@@ -1313,7 +1374,16 @@
               <article class="capability-card">
                 <div class="capability-top">
                   <span class="pill">基础能力</span>
-                  <span class="card-icon gold">O</span>
+                  <span class="card-icon gold" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" focusable="false">
+                      <path d="m8 8-4 4 4 4"></path>
+                      <path d="m16 8 4 4-4 4"></path>
+                      <path d="M10.5 18.5 13.5 5.5"></path>
+                      <circle cx="12" cy="12" r="2"></circle>
+                      <path d="M12 3.5v2"></path>
+                      <path d="M12 18.5v2"></path>
+                    </svg>
+                  </span>
                 </div>
                 <h3>开放接口与基础配置</h3>
                 <p>为前端管理端、外部系统、现场对象和交付工具提供统一支撑。</p>
