@@ -725,6 +725,77 @@
         white-space: pre;
       }
 
+      .os-tabs {
+        position: relative;
+        margin: 16px 0 8px;
+        border-radius: 14px;
+        border: 1px solid rgba(201, 162, 39, 0.18);
+        background: rgba(255, 255, 255, 0.55);
+        overflow: hidden;
+      }
+
+      .os-tabs-nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        padding: 10px 12px;
+        background: linear-gradient(180deg, #1a1620, #121018);
+        border-bottom: 1px solid rgba(201, 162, 39, 0.2);
+      }
+
+      .os-tabs-nav button {
+        appearance: none;
+        border: 1px solid transparent;
+        background: transparent;
+        color: rgba(245, 242, 234, 0.55);
+        font-family: var(--font-display);
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+        padding: 8px 14px;
+        border-radius: 999px;
+        cursor: pointer;
+        transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+      }
+
+      .os-tabs-nav button:hover {
+        color: #fff8e7;
+        background: rgba(201, 162, 39, 0.1);
+      }
+
+      .os-tabs-nav button.is-active {
+        color: #1a1408;
+        background: linear-gradient(145deg, #e8d48a, #c9a227);
+        border-color: rgba(139, 105, 20, 0.3);
+      }
+
+      .os-tabs-nav button:disabled,
+      .os-tabs-nav button.is-disabled {
+        color: rgba(245, 242, 234, 0.28);
+        background: rgba(255, 255, 255, 0.04);
+        border-color: rgba(255, 255, 255, 0.06);
+        cursor: not-allowed;
+        opacity: 0.55;
+      }
+
+      .os-tabs-nav button:disabled:hover,
+      .os-tabs-nav button.is-disabled:hover {
+        color: rgba(245, 242, 234, 0.28);
+        background: rgba(255, 255, 255, 0.04);
+      }
+
+      .os-panel {
+        display: none;
+        padding: 18px 18px 16px;
+      }
+
+      .os-panel.is-active { display: block; }
+
+      .os-panel .panel-lead {
+        margin: 0 0 12px;
+        color: var(--ink-soft);
+      }
+
       table {
         width: 100%;
         border-collapse: separate;
@@ -1769,25 +1840,71 @@
           <section class="reveal" id="deploy" data-index="13">
             <h2><span class="num">13</span>服务器离线部署</h2>
             <p>
-              现场服务器需先完成 RCS 安装，方可打开管理端并使用本手册中的功能。
-              交付方会提供单文件安装包（文件名类似 <span class="tag">rcs-offline-linux-amd64-xxx.run</span>，其中 <span class="tag">xxx</span> 为版本号）。
+              现场需先在服务器完成 RCS 安装，方可打开管理端并使用本手册中的功能。
+              请先选择服务器操作系统，查看对应说明。当前一键安装包面向 <strong>Ubuntu（x86_64）Linux</strong> 服务器。
             </p>
-            <div class="how">
-              <div class="title">一键安装</div>
-              <ol>
-                <li>确认服务器为 Ubuntu（x86_64），并已安装、启动 Docker。</li>
-                <li>将安装包上传至服务器，并进入该文件所在目录。</li>
-                <li>执行以下命令（请将文件名替换为现场实际交付的文件名）：</li>
-              </ol>
-              <pre class="cmd"><code>sudo bash rcs-offline-linux-amd64-xxx.run</code></pre>
-            </div>
-            <p>
-              脚本将自动解压、导入镜像并启动服务。完成后请按提示使用浏览器打开管理端地址登录。
-              更详细的端口、备份与升级说明，见交付包内的《离线部署》说明文档。
-            </p>
-            <div class="note">
-              <strong>注意：</strong>
-              命令中的 <span class="tag">xxx</span> 请替换为实际版本号（例如交付文件上的日期编号），请勿照抄字母 xxx。
+
+            <div class="os-tabs" data-os-tabs>
+              <div class="os-tabs-nav" role="tablist" aria-label="选择操作系统">
+                <button type="button" role="tab" aria-selected="true" data-os="linux" class="is-active">Linux</button>
+                <button type="button" role="tab" aria-selected="false" data-os="windows" disabled aria-disabled="true" title="暂未开放">Windows</button>
+                <button type="button" role="tab" aria-selected="false" data-os="macos" disabled aria-disabled="true" title="暂未开放">macOS</button>
+              </div>
+
+              <div class="os-panel is-active" data-os-panel="linux" role="tabpanel">
+                <p class="panel-lead">
+                  交付文件名类似 <span class="tag">rcs-offline-linux-amd64-xxx.run</span>（<span class="tag">xxx</span> 为版本号）。
+                  推荐系统：Ubuntu 20.04 / 22.04 / 24.04，CPU 架构为 x86_64。
+                </p>
+                <div class="how">
+                  <div class="title">一键安装</div>
+                  <ol>
+                    <li>将安装包上传至服务器，并进入该文件所在目录。</li>
+                    <li>执行以下命令（请将文件名替换为现场实际交付的文件名）：</li>
+                  </ol>
+                  <pre class="cmd"><code>sudo bash rcs-offline-linux-amd64-xxx.run</code></pre>
+                </div>
+                <div class="note ok">
+                  <strong>Docker 环境：</strong>
+                  安装脚本会自动检测 Docker Engine 与 Docker Compose 是否可用。
+                  若未安装或不可用，脚本可提示并通过 Docker 官方软件源<strong>在线安装</strong>（需服务器可访问外网）。
+                  纯离线机房请由管理员预先安装好 Docker。
+                </div>
+                <p>
+                  脚本将自动解压、导入镜像并启动服务。完成后请按提示使用浏览器打开管理端地址登录。
+                  更详细的端口、备份与升级说明，见交付包内的《离线部署》说明文档。
+                </p>
+                <div class="note">
+                  <strong>注意：</strong>
+                  命令中的 <span class="tag">xxx</span> 请替换为实际版本号（例如交付文件上的日期编号），请勿照抄字母 xxx。
+                </div>
+              </div>
+
+              <div class="os-panel" data-os-panel="windows" role="tabpanel" hidden>
+                <p class="panel-lead">
+                  当前交付的一键安装包<strong>不支持在 Windows 本机直接部署 RCS 服务端</strong>。
+                </p>
+                <ul>
+                  <li>请使用一台 <strong>Ubuntu（x86_64）Linux 服务器</strong>完成部署，命令见「Linux」页签。</li>
+                  <li>部署完成后，可在 Windows 电脑上用浏览器访问管理端（默认 <span class="tag">http://服务器IP</span>）。</li>
+                </ul>
+                <div class="note">
+                  客户端操作系统与服务端操作系统相互独立：Windows 用于日常操作即可，服务请安装在 Linux 服务器上。
+                </div>
+              </div>
+
+              <div class="os-panel" data-os-panel="macos" role="tabpanel" hidden>
+                <p class="panel-lead">
+                  当前交付的一键安装包<strong>不支持在 macOS 本机直接部署 RCS 服务端</strong>。
+                </p>
+                <ul>
+                  <li>请使用一台 <strong>Ubuntu（x86_64）Linux 服务器</strong>完成部署，命令见「Linux」页签。</li>
+                  <li>部署完成后，可在 macOS 上用浏览器访问管理端（默认 <span class="tag">http://服务器IP</span>）。</li>
+                </ul>
+                <div class="note">
+                  现场生产环境请以 Linux 服务器为准；macOS 一般仅用于办公访问管理端。
+                </div>
+              </div>
             </div>
           </section>
         </div>
@@ -1958,6 +2075,34 @@
           cancelAnimationFrame(raf);
           resize();
           tick();
+        });
+      })();
+
+      (function () {
+        var root = document.querySelector('[data-os-tabs]');
+        if (!root) return;
+        var buttons = root.querySelectorAll('.os-tabs-nav [data-os]');
+        var panels = root.querySelectorAll('[data-os-panel]');
+
+        function activate(os) {
+          buttons.forEach(function (btn) {
+            var on = btn.getAttribute('data-os') === os;
+            btn.classList.toggle('is-active', on);
+            btn.setAttribute('aria-selected', on ? 'true' : 'false');
+          });
+          panels.forEach(function (panel) {
+            var on = panel.getAttribute('data-os-panel') === os;
+            panel.classList.toggle('is-active', on);
+            if (on) panel.removeAttribute('hidden');
+            else panel.setAttribute('hidden', '');
+          });
+        }
+
+        buttons.forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            if (btn.disabled || btn.getAttribute('aria-disabled') === 'true') return;
+            activate(btn.getAttribute('data-os'));
+          });
         });
       })();
     </script>
