@@ -1,0 +1,1918 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>腾擎 · RCS 使用手册</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600&family=Noto+Sans+SC:wght@400;500;600;700&family=Sora:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --ink: #0e1218;
+        --ink-soft: #3d4a5c;
+        --muted: #738092;
+        --line: rgba(14, 18, 24, 0.07);
+        --line-strong: rgba(14, 18, 24, 0.11);
+        --bg-0: #e6eaf0;
+        --bg-1: #f3f5f8;
+        --card: rgba(255, 255, 255, 0.72);
+        --card-solid: #ffffff;
+        --gold: #c9a227;
+        --gold-deep: #8b6914;
+        --gold-dim: #5c4710;
+        --purple: #5b2d8e;
+        --purple-soft: rgba(91, 45, 142, 0.12);
+        --accent: var(--gold-deep);
+        --accent-deep: var(--gold-dim);
+        --accent-bright: var(--gold);
+        --accent-soft: rgba(201, 162, 39, 0.1);
+        --ok: #1f7a4d;
+        --ok-bg: rgba(31, 122, 77, 0.08);
+        --warn: #9a6b16;
+        --warn-bg: rgba(154, 107, 22, 0.1);
+        --hero-ink: #f5f2ea;
+        --radius: 20px;
+        --shadow:
+          0 1px 0 rgba(255, 255, 255, 0.85) inset,
+          0 22px 60px rgba(14, 24, 40, 0.09);
+        --font-display: 'Sora', 'Noto Sans SC', sans-serif;
+        --font-body: 'Noto Sans SC', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+        --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+      }
+
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        font-family: var(--font-body);
+        font-size: 15.5px;
+        line-height: 1.8;
+        background:
+          radial-gradient(900px 480px at 8% -5%, rgba(91, 45, 142, 0.14), transparent 55%),
+          radial-gradient(800px 420px at 92% 0%, rgba(201, 162, 39, 0.16), transparent 50%),
+          radial-gradient(700px 500px at 50% 100%, rgba(14, 18, 24, 0.04), transparent 60%),
+          linear-gradient(180deg, #f7f8fb 0%, #e8ecf2 100%);
+        min-height: 100vh;
+      }
+
+      body::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 0;
+        opacity: 0.4;
+        background-image:
+          linear-gradient(rgba(14, 18, 24, 0.03) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(14, 18, 24, 0.03) 1px, transparent 1px);
+        background-size: 56px 56px;
+        mask-image: radial-gradient(ellipse 70% 60% at 50% 30%, #000 10%, transparent 70%);
+      }
+
+      body::after {
+        content: '';
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 0;
+        background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+        opacity: 0.5;
+        mix-blend-mode: multiply;
+      }
+
+      .shell {
+        position: relative;
+        z-index: 1;
+        width: min(1200px, calc(100% - 40px));
+        margin: 0 auto;
+        padding: 32px 0 80px;
+      }
+
+      /* —— Hero —— */
+      .hero {
+        position: relative;
+        overflow: hidden;
+        border-radius: 28px;
+        padding: 44px 48px 48px;
+        color: var(--hero-ink);
+        background: #000;
+        border: 1px solid rgba(201, 162, 39, 0.22);
+        box-shadow:
+          0 0 0 1px rgba(0, 0, 0, 0.8),
+          0 40px 100px rgba(0, 0, 0, 0.45),
+          0 0 80px rgba(91, 45, 142, 0.15);
+        margin-bottom: 28px;
+        animation: heroIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+      }
+
+      .hero::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(ellipse 55% 70% at 85% 15%, rgba(91, 45, 142, 0.38), transparent 55%),
+          radial-gradient(ellipse 40% 50% at 15% 85%, rgba(201, 162, 39, 0.1), transparent 55%),
+          linear-gradient(115deg, transparent 40%, rgba(201, 162, 39, 0.04) 100%);
+        pointer-events: none;
+      }
+
+      .hero::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background:
+          repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 3px,
+            rgba(255, 255, 255, 0.012) 3px,
+            rgba(255, 255, 255, 0.012) 4px
+          );
+        pointer-events: none;
+        animation: scan 12s linear infinite;
+        opacity: 0.7;
+      }
+
+      .hero-frame {
+        position: absolute;
+        inset: 14px;
+        border: 1px solid rgba(201, 162, 39, 0.14);
+        border-radius: 18px;
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      .hero-frame::before,
+      .hero-frame::after {
+        content: '';
+        position: absolute;
+        width: 22px;
+        height: 22px;
+        border-color: rgba(201, 162, 39, 0.75);
+        border-style: solid;
+        box-shadow: 0 0 12px rgba(201, 162, 39, 0.25);
+      }
+
+      .hero-frame::before {
+        top: -1px;
+        left: -1px;
+        border-width: 2px 0 0 2px;
+      }
+
+      .hero-frame::after {
+        right: -1px;
+        bottom: -1px;
+        border-width: 0 2px 2px 0;
+      }
+
+      .hero-corners {
+        position: absolute;
+        inset: 14px;
+        pointer-events: none;
+        z-index: 1;
+        border-radius: 18px;
+      }
+
+      .hero-corners span {
+        position: absolute;
+        width: 22px;
+        height: 22px;
+        border-color: rgba(201, 162, 39, 0.75);
+        border-style: solid;
+        box-shadow: 0 0 12px rgba(201, 162, 39, 0.25);
+      }
+
+      .hero-corners span:first-child {
+        top: -1px;
+        right: -1px;
+        border-width: 2px 2px 0 0;
+      }
+
+      .hero-corners span:last-child {
+        bottom: -1px;
+        left: -1px;
+        border-width: 0 0 2px 2px;
+      }
+
+      .hero-inner {
+        position: relative;
+        z-index: 2;
+        max-width: 720px;
+      }
+
+      .brand-row {
+        display: flex;
+        align-items: flex-end;
+        gap: 16px;
+        margin-bottom: 30px;
+      }
+
+      .brand-logo {
+        display: block;
+        height: 68px;
+        width: auto;
+        max-width: min(340px, 78vw);
+        object-fit: contain;
+        object-position: left center;
+        mix-blend-mode: lighten;
+        filter: drop-shadow(0 0 24px rgba(201, 162, 39, 0.15));
+      }
+
+      .brand-sub {
+        padding-bottom: 8px;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        font-weight: 500;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: rgba(201, 162, 39, 0.55);
+      }
+
+      .brand-mark,
+      .brand,
+      .brand-divider { display: none; }
+
+      .hero h1 {
+        margin: 0 0 16px;
+        font-family: var(--font-display);
+        font-size: clamp(30px, 4.4vw, 44px);
+        font-weight: 700;
+        letter-spacing: -0.03em;
+        line-height: 1.15;
+        background: linear-gradient(120deg, #fff8e7 0%, #f5f2ea 45%, #c9a227 120%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+
+      .hero .lede {
+        margin: 0;
+        font-size: 16px;
+        line-height: 1.8;
+        color: rgba(245, 242, 234, 0.78);
+        max-width: 38em;
+      }
+
+      .hero .meta {
+        margin-top: 30px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .chip {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        font-weight: 500;
+        letter-spacing: 0.06em;
+        padding: 8px 14px;
+        border-radius: 999px;
+        color: rgba(245, 242, 234, 0.88);
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(201, 162, 39, 0.28);
+        backdrop-filter: blur(10px);
+      }
+
+      /* —— Layout —— */
+      .layout {
+        display: grid;
+        grid-template-columns: 252px minmax(0, 1fr);
+        gap: 22px;
+        align-items: start;
+        animation: riseIn 0.7s 0.1s cubic-bezier(0.22, 1, 0.36, 1) both;
+      }
+
+      .toc {
+        position: sticky;
+        top: 18px;
+        padding: 18px 14px 16px;
+        border-radius: var(--radius);
+        background:
+          linear-gradient(165deg, rgba(20, 16, 28, 0.96), rgba(8, 8, 10, 0.94));
+        border: 1px solid rgba(201, 162, 39, 0.2);
+        box-shadow:
+          0 24px 60px rgba(0, 0, 0, 0.28),
+          0 0 0 1px rgba(255, 255, 255, 0.03) inset;
+        backdrop-filter: blur(18px);
+      }
+
+      .toc h2 {
+        margin: 0 8px 14px;
+        padding: 0 0 12px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        font-family: var(--font-mono);
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: rgba(201, 162, 39, 0.7);
+      }
+
+      .toc ol {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      .toc li { margin: 0; }
+
+      .toc a {
+        display: block;
+        position: relative;
+        padding: 9px 12px 9px 14px;
+        border-radius: 10px;
+        color: rgba(245, 242, 234, 0.62);
+        text-decoration: none;
+        font-size: 13px;
+        line-height: 1.4;
+        transition: color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+      }
+
+      .toc a::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        width: 2px;
+        height: 0;
+        border-radius: 2px;
+        background: var(--gold);
+        transform: translateY(-50%);
+        transition: height 0.2s ease;
+      }
+
+      .toc a:hover,
+      .toc a.is-active {
+        color: #fff8e7;
+        background: rgba(201, 162, 39, 0.08);
+        transform: translateX(2px);
+      }
+
+      .toc a:hover::before,
+      .toc a.is-active::before { height: 60%; }
+
+      .content {
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      /* —— Sections —— */
+      section {
+        position: relative;
+        padding: 30px 34px 28px;
+        border-radius: var(--radius);
+        background:
+          linear-gradient(180deg, rgba(255, 255, 255, 0.97), #fff);
+        border: 1px solid var(--line-strong);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+      }
+
+      section:hover {
+        box-shadow:
+          0 1px 0 rgba(255, 255, 255, 0.9) inset,
+          0 28px 70px rgba(14, 24, 40, 0.12);
+      }
+
+      section::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 3px;
+        background: linear-gradient(180deg, var(--gold), var(--purple));
+      }
+
+      section::after {
+        content: attr(data-index);
+        position: absolute;
+        right: 18px;
+        top: 10px;
+        font-family: var(--font-mono);
+        font-size: 56px;
+        font-weight: 600;
+        letter-spacing: -0.04em;
+        color: rgba(14, 18, 24, 0.035);
+        pointer-events: none;
+        line-height: 1;
+      }
+
+      section h2 {
+        position: relative;
+        z-index: 1;
+        margin: 0 0 16px;
+        padding: 0 0 14px;
+        border-bottom: 1px solid var(--line);
+        font-family: var(--font-display);
+        font-size: 21px;
+        font-weight: 700;
+        letter-spacing: -0.025em;
+        color: var(--ink);
+      }
+
+      section h2 .num {
+        display: inline-block;
+        margin-right: 10px;
+        padding: 3px 8px;
+        border-radius: 6px;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        color: var(--gold-dim);
+        background: rgba(201, 162, 39, 0.12);
+        border: 1px solid rgba(201, 162, 39, 0.2);
+        vertical-align: 2px;
+      }
+
+      section h3 {
+        margin: 26px 0 10px;
+        font-family: var(--font-display);
+        font-size: 15.5px;
+        font-weight: 600;
+        color: var(--gold-dim);
+      }
+
+      section h4 {
+        margin: 18px 0 8px;
+        font-size: 14.5px;
+        font-weight: 600;
+        color: var(--ink);
+      }
+
+      p { margin: 0 0 12px; color: var(--ink-soft); }
+      ul, ol { margin: 0 0 14px; padding-left: 1.2em; color: var(--ink-soft); }
+      li { margin-bottom: 8px; }
+      strong { color: var(--ink); font-weight: 600; }
+
+      .grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+        margin-top: 6px;
+        align-items: stretch;
+      }
+
+      .card-soft {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        padding: 20px 20px 18px;
+        border-radius: 14px;
+        background:
+          linear-gradient(145deg, rgba(201, 162, 39, 0.1), rgba(91, 45, 142, 0.04));
+        border: 1px solid rgba(201, 162, 39, 0.16);
+        overflow: hidden;
+      }
+
+      .card-soft::after {
+        content: '';
+        position: absolute;
+        right: -20px;
+        top: -20px;
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(91, 45, 142, 0.12), transparent 70%);
+      }
+
+      .card-soft .card-title {
+        position: relative;
+        display: block;
+        margin: 0;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--gold-dim);
+      }
+
+      .daily-flow {
+        position: relative;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        flex: 1;
+      }
+
+      .daily-flow li {
+        position: relative;
+        display: grid;
+        grid-template-columns: 28px 1fr;
+        align-items: center;
+        gap: 10px;
+        margin: 0;
+        padding: 9px 12px;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.62);
+        border: 1px solid rgba(201, 162, 39, 0.14);
+        font-size: 13.5px;
+        font-weight: 500;
+        color: var(--ink);
+        line-height: 1.4;
+      }
+
+      .daily-flow .n {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--gold-dim);
+      }
+
+      .rule-prereq {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+        flex: 1;
+      }
+
+      .rule-prereq .group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        padding: 14px 14px 12px;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.62);
+        border: 1px solid rgba(201, 162, 39, 0.18);
+      }
+
+      .rule-prereq .group-label {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        color: var(--gold-dim);
+      }
+
+      .rule-prereq .pair {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .rule-prereq .pill {
+        display: inline-flex;
+        align-items: center;
+        padding: 7px 12px;
+        border-radius: 999px;
+        font-size: 13.5px;
+        font-weight: 600;
+        color: var(--ink);
+        background: rgba(255, 255, 255, 0.9);
+        border: 1px solid rgba(201, 162, 39, 0.24);
+        box-shadow: 0 1px 0 rgba(255, 255, 255, 0.7) inset;
+      }
+
+      .rule-prereq .plus {
+        width: 22px;
+        height: 22px;
+        display: grid;
+        place-items: center;
+        border-radius: 50%;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--gold-dim);
+        background: rgba(201, 162, 39, 0.12);
+        flex: 0 0 auto;
+      }
+
+      .rule-prereq .then {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 0 2px;
+      }
+
+      .rule-prereq .then .arrow {
+        display: grid;
+        place-items: center;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        font-size: 12px;
+        color: var(--gold-dim);
+        background: rgba(201, 162, 39, 0.12);
+        flex: 0 0 auto;
+      }
+
+      .rule-prereq .result {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        min-height: 40px;
+        padding: 8px 14px;
+        border-radius: 10px;
+        font-size: 13.5px;
+        font-weight: 600;
+        color: var(--ink-soft);
+        background: rgba(255, 255, 255, 0.38);
+        border: 1px dashed rgba(14, 18, 24, 0.1);
+      }
+
+      .card-soft .card-note {
+        position: relative;
+        margin: 0;
+        padding-top: 12px;
+        border-top: 1px solid rgba(201, 162, 39, 0.12);
+        font-size: 13.5px;
+        color: var(--muted);
+        line-height: 1.7;
+      }
+
+      .how {
+        margin: 14px 0 16px;
+        padding: 18px 20px;
+        border-radius: 14px;
+        background:
+          linear-gradient(180deg, #fbfaf7 0%, #f5f3ee 100%);
+        border: 1px solid rgba(201, 162, 39, 0.14);
+        box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8) inset;
+      }
+
+      .how .title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 14px;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--gold-dim);
+      }
+
+      .how .title::before {
+        content: '';
+        width: 7px;
+        height: 7px;
+        border-radius: 2px;
+        background: linear-gradient(135deg, var(--gold), var(--purple));
+        box-shadow: 0 0 0 4px rgba(201, 162, 39, 0.15);
+      }
+
+      .how ol {
+        margin: 0;
+        padding-left: 0;
+        list-style: none;
+        counter-reset: step;
+      }
+
+      .how ol > li {
+        position: relative;
+        padding-left: 38px;
+        margin-bottom: 12px;
+        counter-increment: step;
+      }
+
+      .how ol > li::before {
+        content: counter(step, decimal-leading-zero);
+        position: absolute;
+        left: 0;
+        top: 0.15em;
+        min-width: 26px;
+        height: 22px;
+        padding: 0 4px;
+        border-radius: 6px;
+        display: grid;
+        place-items: center;
+        font-family: var(--font-mono);
+        font-size: 10px;
+        font-weight: 600;
+        color: #1a1408;
+        background: linear-gradient(145deg, #e8d48a, #c9a227);
+        border: 1px solid rgba(139, 105, 20, 0.25);
+      }
+
+      .how ol > li:last-child { margin-bottom: 0; }
+
+      table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        margin: 14px 0 10px;
+        font-size: 14px;
+        overflow: hidden;
+        border-radius: 14px;
+        border: 1px solid rgba(201, 162, 39, 0.14);
+      }
+
+      th, td {
+        padding: 12px 14px;
+        text-align: left;
+        vertical-align: top;
+        border-bottom: 1px solid var(--line);
+      }
+
+      tr:last-child td { border-bottom: 0; }
+      tbody tr:hover td { background: rgba(201, 162, 39, 0.04); }
+
+      th {
+        background: linear-gradient(180deg, #1a1620, #121018);
+        font-family: var(--font-mono);
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: rgba(201, 162, 39, 0.85);
+      }
+
+      td { color: var(--ink-soft); background: #fff; }
+      td:first-child { color: var(--ink); font-weight: 500; }
+
+      .note {
+        margin: 16px 0;
+        padding: 14px 16px 14px 18px;
+        border-radius: 12px;
+        background: rgba(201, 162, 39, 0.07);
+        border: 1px solid rgba(201, 162, 39, 0.16);
+        border-left: 3px solid var(--gold);
+        color: var(--ink-soft);
+      }
+
+      .note.warn {
+        background: var(--warn-bg);
+        border-color: rgba(154, 107, 22, 0.18);
+        border-left-color: var(--warn);
+      }
+
+      .note.ok {
+        background: var(--ok-bg);
+        border-color: rgba(31, 122, 77, 0.16);
+        border-left-color: var(--ok);
+      }
+
+      .flow {
+        display: grid;
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+        gap: 10px;
+        margin: 20px 0;
+      }
+
+      .flow .step {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        min-height: 78px;
+        padding: 12px 10px;
+        border-radius: 14px;
+        font-family: var(--font-display);
+        font-size: 12.5px;
+        font-weight: 600;
+        line-height: 1.35;
+        color: #fff8e7;
+        background:
+          linear-gradient(160deg, #1a1420 0%, #3d2a12 45%, #8b6914 100%);
+        border: 1px solid rgba(201, 162, 39, 0.35);
+        box-shadow:
+          0 12px 28px rgba(0, 0, 0, 0.18),
+          0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+      }
+
+      .flow .step::after {
+        content: '';
+        position: absolute;
+        right: -7px;
+        top: 50%;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--gold);
+        transform: translateY(-50%);
+        box-shadow: 0 0 0 3px rgba(201, 162, 39, 0.2);
+        z-index: 1;
+      }
+
+      .flow .step:last-child::after { display: none; }
+      .flow .arrow { display: none; }
+
+      .tag {
+        display: inline-block;
+        margin: 0 2px;
+        padding: 2px 9px;
+        border-radius: 6px;
+        font-size: 12.5px;
+        font-weight: 500;
+        color: var(--gold-dim);
+        background: rgba(201, 162, 39, 0.1);
+        border: 1px solid rgba(201, 162, 39, 0.18);
+      }
+
+      .faq-item {
+        padding: 16px 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .faq-item:last-of-type { border-bottom: 0; }
+
+      .faq-item h3 {
+        margin: 0 0 6px;
+        font-size: 15px;
+        color: var(--ink);
+      }
+
+      .faq-item p { margin: 0; }
+
+      footer.site-footer {
+        margin-top: 40px;
+        padding: 28px 12px 10px;
+        text-align: center;
+        border-top: 1px solid rgba(201, 162, 39, 0.12);
+      }
+
+      footer.site-footer .footer-brand {
+        margin: 0 0 6px;
+        font-family: var(--font-mono);
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.18em;
+        color: var(--gold-dim);
+      }
+
+      footer.site-footer .footer-meta {
+        margin: 0;
+        font-size: 12px;
+        line-height: 1.7;
+        color: var(--muted);
+      }
+
+      @keyframes heroIn {
+        from { opacity: 0; transform: translateY(20px) scale(0.985); }
+        to { opacity: 1; transform: none; }
+      }
+
+      @keyframes riseIn {
+        from { opacity: 0; transform: translateY(22px); }
+        to { opacity: 1; transform: none; }
+      }
+
+      @keyframes scan {
+        from { transform: translateY(0); }
+        to { transform: translateY(4px); }
+      }
+
+      @media (max-width: 960px) {
+        .layout { grid-template-columns: 1fr; }
+        .toc { position: static; }
+        .toc ol {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 2px 8px;
+        }
+        .flow { grid-template-columns: 1fr 1fr; }
+        .flow .step::after { display: none; }
+      }
+
+      @media (max-width: 640px) {
+        .shell { width: calc(100% - 24px); padding-top: 18px; }
+        .hero { padding: 28px 22px 32px; border-radius: 22px; }
+        .hero-frame { inset: 10px; }
+        .brand-logo { height: 48px; }
+        .brand-sub { display: none; }
+        section { padding: 24px 20px; }
+        section::after { font-size: 42px; right: 12px; }
+        .grid-2, .toc ol, .flow { grid-template-columns: 1fr; }
+      }
+
+      @media print {
+        body { background: #fff; }
+        body::before, body::after, .hero::after, .hero-frame, .hero-corners, .hero-canvas, .hero-glow, .hero-visual, .toc, .progress { display: none; }
+        .shell { width: 100%; }
+        .layout { grid-template-columns: 1fr; }
+        .hero, section { box-shadow: none; break-inside: avoid; }
+        a { color: inherit; text-decoration: none; }
+      }
+
+
+      /* —— Flash layer —— */
+      .progress {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 2px;
+        width: 0%;
+        z-index: 100;
+        background: linear-gradient(90deg, var(--purple), var(--gold), #fff8e7);
+        box-shadow: 0 0 12px rgba(201, 162, 39, 0.65);
+        transition: width 0.05s linear;
+      }
+
+      .hero {
+        display: grid;
+        grid-template-columns: minmax(0, 1.05fr) minmax(220px, 0.95fr);
+        gap: 12px;
+        align-items: stretch;
+        min-height: 340px;
+      }
+
+      .hero-glow {
+        position: absolute;
+        width: 280px;
+        height: 280px;
+        border-radius: 50%;
+        filter: blur(50px);
+        pointer-events: none;
+        z-index: 0;
+        opacity: 0.55;
+        animation: orbFloat 9s ease-in-out infinite;
+      }
+
+      .hero-glow.g1 {
+        top: -80px;
+        right: 8%;
+        background: rgba(91, 45, 142, 0.55);
+      }
+
+      .hero-glow.g2 {
+        bottom: -100px;
+        left: 10%;
+        background: rgba(201, 162, 39, 0.28);
+        animation-delay: -4s;
+        animation-duration: 11s;
+      }
+
+      .hero-hud {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 18px;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: rgba(201, 162, 39, 0.72);
+      }
+
+      .hero-hud .dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #3dd68c;
+        box-shadow: 0 0 0 0 rgba(61, 214, 140, 0.55);
+        animation: pulseDot 1.8s ease-out infinite;
+      }
+
+      .hero-hud .sep {
+        opacity: 0.35;
+      }
+
+      .hero h1 {
+        background-size: 200% auto;
+        animation: titleShine 6s ease-in-out infinite;
+      }
+
+      .chip {
+        position: relative;
+        overflow: hidden;
+        animation: chipIn 0.6s ease both;
+      }
+
+      .chip:nth-child(2) { animation-delay: 0.08s; }
+      .chip:nth-child(3) { animation-delay: 0.16s; }
+
+      .chip::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -120%;
+        width: 80%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 248, 231, 0.22), transparent);
+        animation: chipSweep 4.5s ease-in-out infinite;
+      }
+
+      .hero-visual {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 8px 4px 8px 0;
+      }
+
+      .hero-emblem {
+        position: relative;
+        width: min(100%, 260px);
+        aspect-ratio: 1;
+        display: grid;
+        place-items: center;
+      }
+
+      .hero-emblem .ring {
+        position: absolute;
+        inset: 8%;
+        border-radius: 50%;
+        border: 1px solid rgba(201, 162, 39, 0.22);
+        box-shadow:
+          0 0 0 12px rgba(201, 162, 39, 0.04),
+          inset 0 0 40px rgba(91, 45, 142, 0.12);
+      }
+
+      .hero-emblem .ring::before {
+        content: '';
+        position: absolute;
+        inset: -1px;
+        border-radius: 50%;
+        border: 1px solid transparent;
+        border-top-color: rgba(201, 162, 39, 0.55);
+        border-right-color: rgba(168, 120, 212, 0.25);
+        animation: ringSoft 14s linear infinite;
+      }
+
+      .hero-emblem .ring-inner {
+        position: absolute;
+        inset: 22%;
+        border-radius: 50%;
+        border: 1px dashed rgba(255, 255, 255, 0.08);
+      }
+
+      .hero-emblem .mark {
+        position: relative;
+        z-index: 1;
+        text-align: center;
+        padding: 12px;
+      }
+
+      .hero-emblem .mark .brand {
+        margin: 0 0 6px;
+        font-family: var(--font-display);
+        font-size: 13px;
+        font-weight: 500;
+        letter-spacing: 0.28em;
+        text-indent: 0.28em;
+        color: rgba(201, 162, 39, 0.7);
+      }
+
+      .hero-emblem .mark .sig {
+        margin: 0;
+        font-family: var(--font-display);
+        font-size: clamp(42px, 5vw, 52px);
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        line-height: 1;
+        background: linear-gradient(140deg, #fff8e7 10%, #c9a227 70%, #a878d4 120%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        text-shadow: none;
+        filter: drop-shadow(0 0 28px rgba(201, 162, 39, 0.25));
+      }
+
+      .hero-emblem .mark .sub {
+        margin: 12px 0 0;
+        font-size: 13px;
+        letter-spacing: 0.12em;
+        color: rgba(245, 242, 234, 0.5);
+      }
+
+      canvas.hero-canvas {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+        pointer-events: none;
+        opacity: 0.55;
+      }
+
+      section.reveal {
+        opacity: 0;
+        transform: translateY(24px);
+        transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1), transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      section.reveal.is-in {
+        opacity: 1;
+        transform: none;
+      }
+
+      .toc {
+        overflow: hidden;
+      }
+
+      .toc::before {
+        content: '';
+        position: absolute;
+        top: -40%;
+        left: -40%;
+        width: 180%;
+        height: 80%;
+        background: radial-gradient(circle, rgba(201, 162, 39, 0.12), transparent 55%);
+        animation: tocGlow 8s ease-in-out infinite;
+        pointer-events: none;
+      }
+
+      .toc { position: sticky; }
+
+      .flow .step {
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+      }
+
+      .flow .step:hover {
+        transform: translateY(-3px) scale(1.02);
+        box-shadow:
+          0 16px 36px rgba(0, 0, 0, 0.28),
+          0 0 24px rgba(201, 162, 39, 0.25);
+      }
+
+      .how ol > li::before {
+        box-shadow: 0 0 12px rgba(201, 162, 39, 0.35);
+      }
+
+      @keyframes orbFloat {
+        0%, 100% { transform: translate(0, 0) scale(1); }
+        50% { transform: translate(-18px, 22px) scale(1.08); }
+      }
+
+      @keyframes pulseDot {
+        0% { box-shadow: 0 0 0 0 rgba(61, 214, 140, 0.55); }
+        70% { box-shadow: 0 0 0 10px rgba(61, 214, 140, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(61, 214, 140, 0); }
+      }
+
+      @keyframes titleShine {
+        0%, 100% { background-position: 0% center; }
+        50% { background-position: 100% center; }
+      }
+
+      @keyframes chipSweep {
+        0%, 60% { left: -120%; }
+        100% { left: 140%; }
+      }
+
+      @keyframes chipIn {
+        from { opacity: 0; transform: translateY(8px); }
+        to { opacity: 1; transform: none; }
+      }
+
+      @keyframes ringSoft {
+        to { transform: rotate(360deg); }
+      }
+
+      @keyframes tocGlow {
+        0%, 100% { transform: translateY(0); opacity: 0.7; }
+        50% { transform: translateY(30%); opacity: 1; }
+      }
+
+      @media (max-width: 960px) {
+        .hero {
+          grid-template-columns: 1fr;
+          min-height: 0;
+        }
+        .hero-visual {
+          justify-content: center;
+          padding: 0 0 8px;
+          order: -1;
+        }
+        .hero-emblem {
+          width: min(100%, 200px);
+        }
+      }
+
+      @media (max-width: 640px) {
+        .hero-visual { display: none; }
+        .hero { display: block; }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .hero, .layout, .hero::after { animation: none; }
+        section { transition: none; }
+        .hero-glow, .hero-emblem .ring::before, .chip::after, .hero h1, .toc::before {
+          animation: none !important;
+        }
+        section.reveal { opacity: 1; transform: none; transition: none; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <div class="progress" id="readProgress" aria-hidden="true"></div>
+      <header class="hero">
+        <div class="hero-frame" aria-hidden="true"></div>
+        <div class="hero-corners" aria-hidden="true"><span></span><span></span></div>
+        <div class="hero-glow g1" aria-hidden="true"></div>
+        <div class="hero-glow g2" aria-hidden="true"></div>
+        <canvas class="hero-canvas" id="heroCanvas" aria-hidden="true"></canvas>
+        <div class="hero-inner">
+          <div class="hero-hud">
+            <span class="dot" aria-hidden="true"></span>
+            <span>SYSTEM ONLINE</span>
+            <span class="sep">·</span>
+            <span>调度 · 地图 · 看板</span>
+          </div>
+          <div class="brand-row">
+            <img
+              class="brand-logo"
+              src="assets/tengqing-logo.png"
+              alt="腾擎"
+              width="280"
+              height="56"
+            />
+            <span class="brand-sub">RCS 使用手册</span>
+          </div>
+          <h1>腾擎 · RCS 使用手册</h1>
+          <div class="meta">
+            <span class="chip">腾擎 · RCS</span>
+            <span class="chip">适用：操作员 / 现场主管</span>
+            <span class="chip">地图 → 车辆 → 订单</span>
+          </div>
+        </div>
+        <div class="hero-visual" aria-hidden="true">
+          <div class="hero-emblem">
+            <div class="ring"></div>
+            <div class="ring-inner"></div>
+            <div class="mark">
+              <p class="brand">腾擎</p>
+              <p class="sig">RCS</p>
+              <p class="sub">机器人调度系统</p>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="layout">
+        <nav class="toc" aria-label="目录">
+          <h2>Contents</h2>
+          <ol>
+            <li><a href="#overview">1. RCS 能做什么</a></li>
+            <li><a href="#ui">2. 界面怎么看</a></li>
+            <li><a href="#login">3. 登录与退出</a></li>
+            <li><a href="#first">4. 第一次怎么用</a></li>
+            <li><a href="#map">5. 地图：建好并启用</a></li>
+            <li><a href="#agv">6. 车辆：登记并启用</a></li>
+            <li><a href="#order">7. 订单：下发与跟踪</a></li>
+            <li><a href="#dashboard">8. 看板：实时监控</a></li>
+            <li><a href="#shelf">9. 货架资料</a></li>
+            <li><a href="#log">10. 查日志</a></li>
+            <li><a href="#user">11. 用户与权限</a></li>
+            <li><a href="#faq">12. 常见问题</a></li>
+          </ol>
+        </nav>
+
+        <div class="content">
+          <section class="reveal" id="overview" data-index="01">
+            <h2><span class="num">01</span>RCS 能做什么</h2>
+            <p>
+              RCS 可以理解成现场的「机器人调度台」。您在电脑上操作这个系统，就能指挥厂区里的 AGV（自动搬运车）：
+              它们走哪条路、去哪个点、去充电还是停车、当前任务做到哪一步。
+            </p>
+            <div class="grid-2">
+              <div class="card-soft">
+                <div class="card-title">您日常主要做这些事</div>
+                <ol class="daily-flow">
+                  <li><span class="n">01</span><span>准备地图</span></li>
+                  <li><span class="n">02</span><span>登记并启用车辆</span></li>
+                  <li><span class="n">03</span><span>下发任务</span></li>
+                  <li><span class="n">04</span><span>看板监控</span></li>
+                  <li><span class="n">05</span><span>查订单 / 日志</span></li>
+                </ol>
+                <p class="card-note">运输、充电、停车都从订单下发；出问题再看订单详情或日志。</p>
+              </div>
+              <div class="card-soft">
+                <div class="card-title">请先记住这一条</div>
+                <div class="rule-prereq">
+                  <div class="group">
+                    <span class="group-label">先准备好（缺一不可）</span>
+                    <div class="pair">
+                      <span class="pill">已启用的地图</span>
+                      <span class="plus">+</span>
+                      <span class="pill">已启用的车辆</span>
+                    </div>
+                  </div>
+                  <div class="then">
+                    <span class="arrow" aria-hidden="true">↓</span>
+                    <span class="result">后面下单和监控才会顺利</span>
+                  </div>
+                </div>
+                <p class="card-note">必须先有一张已启用的地图，再有一台已启用的车辆，后面下单和监控才会顺利。顺序反了，系统往往会拦住您。</p>
+              </div>
+            </div>
+          </section>
+
+          <section class="reveal" id="ui" data-index="02">
+            <h2><span class="num">02</span>界面怎么看</h2>
+            <p>
+              登录成功后，页面上方是系统名称，左边是菜单，右边是当前功能页面。
+              您平时只需要从左边点进对应模块即可。
+            </p>
+            <table>
+              <thead><tr><th>左边菜单</th><th>您可以在这里做什么</th></tr></thead>
+              <tbody>
+                <tr><td>首页</td><td>欢迎页，没有业务操作，可忽略</td></tr>
+                <tr><td>AGV管理</td><td>管车辆、车型、动作模板；进某台车的详情做控制</td></tr>
+                <tr><td>地图管理</td><td>新建/编辑地图，启用或停用地图</td></tr>
+                <tr><td>订单管理</td><td>查询任务、新建任务、取消或复制任务</td></tr>
+                <tr><td>货架管理</td><td>登记货架型号资料（尺寸、载重等）</td></tr>
+                <tr><td>地图看板</td><td>全屏大屏，实时看车在地图上的位置和状态</td></tr>
+                <tr><td>日志管理</td><td>按时间查看系统记录，方便事后排查</td></tr>
+              </tbody>
+            </table>
+            <div class="note">
+              <strong>小提示：</strong>
+              打开「地图看板」、编辑/预览地图、进入用户管理时，浏览器往往会<strong>再弹出一个新窗口</strong>。
+              如果点了没反应，请看浏览器地址栏附近是否提示「已拦截弹窗」，允许后重试。
+            </div>
+            <p>
+              账号相关功能不在左边菜单里，而在页面<strong>右上角头像</strong>中（只有管理员一类账号才会看到）。
+            </p>
+          </section>
+
+          <section class="reveal" id="login" data-index="03">
+            <h2><span class="num">03</span>登录与退出</h2>
+            <div class="how">
+              <div class="title">怎么登录</div>
+              <ol>
+                <li>用浏览器打开现场提供的系统地址。</li>
+                <li>在「欢迎登录」页输入账号：一般是 <strong>11 位手机号</strong>。</li>
+                <li>输入密码：需要同时有数字和字母，长度 8～32 位。</li>
+                <li>点击「登录」进入系统。</li>
+              </ol>
+            </div>
+            <p>演示或交付环境里，常用账号示例如下（具体以现场开通为准）：</p>
+            <table>
+              <thead><tr><th>账号</th><th>角色</th><th>适合谁</th></tr></thead>
+              <tbody>
+                <tr><td>17795790955</td><td>管理员</td><td>全部功能，含账号权限管理</td></tr>
+                <tr><td>17795790956</td><td>地图操作员</td><td>主要做地图相关工作</td></tr>
+                <tr><td>17795790957</td><td>订单操作员</td><td>主要做订单相关工作</td></tr>
+              </tbody>
+            </table>
+            <p>
+              登录页常常已经帮您填好管理员账号。有时第一次打开会自动进入系统，这是正常现象。
+            </p>
+            <div class="how">
+              <div class="title">怎么退出</div>
+              <ol>
+                <li>点击页面右上角头像（或「退出登录」按钮）。</li>
+                <li>选择「退出登录」。</li>
+                <li>回到登录页后，需要再点一次「登录」才会进入（不会马上自动登回去）。</li>
+              </ol>
+            </div>
+            <div class="note warn">
+              如果点某个菜单提示没有权限，说明当前账号不能用这个功能，请找管理员开通。
+            </div>
+          </section>
+
+          <section class="reveal" id="first" data-index="04">
+            <h2><span class="num">04</span>第一次怎么用（推荐流程）</h2>
+            <p>新现场、新仓库，或者第一次建图，建议严格按下面顺序操作，能少很多返工：</p>
+            <div class="flow">
+              <span class="step">① 新建并画好地图</span>
+              <span class="arrow">→</span>
+              <span class="step">② 启用地图</span>
+              <span class="arrow">→</span>
+              <span class="step">③ 配好车型</span>
+              <span class="arrow">→</span>
+              <span class="step">④ 把 AGV 登记进系统</span>
+              <span class="arrow">→</span>
+              <span class="step">⑤ 车联网后启用车辆</span>
+              <span class="arrow">→</span>
+              <span class="step">⑥ 下发第一笔订单</span>
+              <span class="arrow">→</span>
+              <span class="step">⑦ 打开看板盯着跑</span>
+            </div>
+            <div class="note ok">
+              <strong>对照检查：</strong><br />
+              · 地图还是「未启用」→ 看板进不去，任务也很难正常调度。<br />
+              · 车还没「启用」→ 订单建了也常常跑不起来。
+            </div>
+          </section>
+
+          <section class="reveal" id="map" data-index="05">
+            <h2><span class="num">05</span>地图：建好并启用</h2>
+            <p>入口：左边菜单 <span class="tag">地图管理</span> → <span class="tag">地图列表</span></p>
+            <p>
+              地图就是 AGV 能走的「厂区道路图」。没有地图，车不知道自己在哪、该往哪开。
+            </p>
+
+            <h3>5.1 新建一张地图</h3>
+            <div class="how">
+              <div class="title">操作步骤</div>
+              <ol>
+                <li>点击「新增地图」。</li>
+                <li>填写地图名称、描述，并选择类型：
+                  <ul>
+                    <li><strong>惯导地图</strong>：场地比较规则、按格子规划时常用；需要填地图长、宽。</li>
+                    <li><strong>SLAM地图</strong>：根据现场扫图结果使用；需要上传数据包（.pgm）和 YAML 文件，并填写最小边距。</li>
+                  </ul>
+                </li>
+                <li>填写「边默认最大速度」（车在路上默认能开多快）。</li>
+                <li>按需设置墙体安全距离（车离墙要留多少余量）。</li>
+                <li>确认提交。成功后会提示「添加地图成功！」</li>
+              </ol>
+            </div>
+            <p>新建出来的地图默认是<strong>未启用</strong>。请继续进入编辑，把点和路画完整后再启用。</p>
+
+            <h3>5.2 编辑地图（把点和路画出来）</h3>
+            <div class="how">
+              <div class="title">操作步骤</div>
+              <ol>
+                <li>在列表里找到目标地图（必须是「未启用」才能编辑）。</li>
+                <li>点击「编辑」，系统通常会打开新窗口。</li>
+                <li>在编辑器里添加/调整点位和路径，并保存。</li>
+              </ol>
+            </div>
+
+            <h4>点位类型怎么选（很重要）</h4>
+            <table>
+              <thead><tr><th>点类型</th><th>什么时候用</th></tr></thead>
+              <tbody>
+                <tr><td>行驶点</td><td>普通经过的点，路上最多</td></tr>
+                <tr><td>充电点</td><td>给车充电的位置；不做这个，「去充电」会找不到地方</td></tr>
+                <tr><td>停车点</td><td>车空闲停靠的位置；不做这个，「去停车」会找不到地方</td></tr>
+                <tr><td>工位</td><td>装卸货、作业的位置</td></tr>
+              </tbody>
+            </table>
+            <p>
+              充电点、停车点、工位通常还要填好角度、实物位置等信息，否则保存或启用时可能校验不通过。
+            </p>
+
+            <h4>编辑时常用能力</h4>
+            <ul>
+              <li><strong>框选多个点/边</strong>：框选后可批量设置点属性、边属性，或批量启用/禁用点。</li>
+              <li><strong>点属性</strong>：可设置角度、停车优先级、点上要执行的动作；还可「指定车型」——
+                不指定表示所有车都能用这个点；指定后，只有对应车型能用，其他车型下单时会看到「车型禁用点」。</li>
+              <li><strong>边（路线）属性</strong>：可设置是否启用、权重（影响系统更倾向选哪条路）、最大速度、边上动作。
+                图上线的粗细/颜色往往对应速度档（默认/慢速/快速）。</li>
+              <li><strong>惯导地图</strong>：可设置基准点、开关网格/坐标轴/图示；支持撤销（Ctrl+Z）。</li>
+              <li><strong>SLAM地图</strong>：一般要先上传/更新扫图文件才能画；可用「选择标定 AGV」；
+                右键可删除或禁用点/边；边还可以做「平滑曲线」。</li>
+            </ul>
+            <div class="note warn">
+              改完一定要点「保存」。如果提示「编辑未保存」或「存在未通过校验的点位」，请先处理完再关窗口，否则改动可能丢失。
+            </div>
+
+            <h3>5.3 预览、启用、停用、删除</h3>
+            <ul>
+              <li><strong>预览</strong>：只看不改，适合核对布局是否正确。</li>
+              <li><strong>启用</strong>：列表里把开关拨到「启用」。启用后，这张图才能用于看板和下发任务。</li>
+              <li><strong>停用</strong>：要改图时，先停用再编辑。如果还有启用中的车，或还有没做完的订单，系统会不允许停用。</li>
+              <li><strong>删除</strong>：只能删除未启用的地图，并且不能还有关联车辆或订单。</li>
+            </ul>
+            <div class="note">
+              <strong>使用口诀：</strong>要改图 → 先停用 → 再编辑并保存 → 再启用。已启用的地图，列表里通常看不到编辑、删除按钮。
+            </div>
+          </section>
+
+          <section class="reveal" id="agv" data-index="06">
+            <h2><span class="num">06</span>车辆：登记并启用</h2>
+            <p>入口：左边菜单 <span class="tag">AGV管理</span></p>
+            <p>这里管三件事：车型模板、动作模板、具体每一台车。</p>
+
+            <h3>6.1 先配车型（建议先做）</h3>
+            <p>
+              进入 <span class="tag">车型列表</span>，点击「新增车型」。
+              车型相当于「这类车长什么样、能开多快、电量策略怎样」。
+              后面登记车辆、下订单都要选车型，所以建议先建好。
+            </p>
+            <p>常见会填：车型名称、长宽高、最大负载、速度、充电相关电量、允许偏差、控制器型号等。</p>
+
+            <h3>6.2 再配动作模板（按需）</h3>
+            <p>
+              进入 <span class="tag">Action列表</span>。
+              这里维护车辆能做的动作（例如顶升、某个业务动作）。
+              下单时可以在起点/终点挂上这些动作；车辆详情里也能立刻发一个动作。
+            </p>
+
+            <h3>6.3 登记一台 AGV</h3>
+            <div class="how">
+              <div class="title">操作步骤</div>
+              <ol>
+                <li>进入 <span class="tag">AGV列表</span>，点击「新增AGV」。</li>
+                <li>填写序列号、车型、IP、端口、所属地图、导航类型（惯导或 SLAM）等。</li>
+                <li>按需打开「自动工作许可」，并确认电量相关参数。</li>
+                <li>提交。成功会提示「添加AGV成功！」</li>
+              </ol>
+            </div>
+            <p>
+              列表里还可以：按地图/序列号查询；批量导入、导出；勾选多台车后批量启用/停用、允许自动/禁止自动。
+              在线状态一般会显示：在线、离线、异常断线。
+            </p>
+
+            <h4>电量参数怎么理解（编辑车辆时常见）</h4>
+            <table>
+              <thead><tr><th>界面名称</th><th>通俗解释</th></tr></thead>
+              <tbody>
+                <tr><td>自动充电电量</td><td>电量低到这个值，系统倾向于让车去充电（常见默认约 20%）</td></tr>
+                <tr><td>充电时最低工作电量</td><td>正在充电时，至少充到这个值才比较适合再接新任务（常见默认约 80%）</td></tr>
+                <tr><td>充电完成电量</td><td>空闲时判断「还要不要继续充」的参考阈值（常见默认约 100%）</td></tr>
+              </tbody>
+            </table>
+            <p>角度允许偏差、XY 允许偏差：车停到位时，允许偏多少；设太严可能经常判定「没停准」。</p>
+
+            <h3>6.4 启用车辆（关键一步）</h3>
+            <p>启用前请现场确认这三件事都满足：</p>
+            <ol>
+              <li>车已经绑定到某张地图，并且这张地图已经启用；</li>
+              <li>车已经联网上线（列表里能看到在线）；</li>
+              <li>车已经上报位置，并且停在地图的某个点上。</li>
+            </ol>
+            <p>缺一样，启用往往会失败。</p>
+            <div class="note warn">
+              <strong>「自动工作许可」开关请认真对待：</strong><br />
+              · <strong>打开</strong>：空闲时系统可以自动给车派任务，也可能自动安排去充电/停车。<br />
+              · <strong>关闭</strong>：一般不会自动去充电/停车；通过「新增 WMS 订单」下的任务，也可能派不到这台车上。<br />
+              如果希望车自动接日常运输任务，请打开这个开关。
+            </div>
+
+            <h3>6.5 进入车辆详情后能做什么</h3>
+            <p>在列表点「查看」进入详情。上面可以看到告警信息、电量、负载、当前动作等；下面有一排常用控制按钮：</p>
+            <table>
+              <thead><tr><th>按钮</th><th>什么时候用</th></tr></thead>
+              <tbody>
+                <tr><td>启用 / 禁用</td><td>这台车要不要参与工作</td></tr>
+                <tr><td>允许自动 / 禁止自动</td><td>要不要让系统自动派单、自动充停</td></tr>
+                <tr><td>去充电</td><td>在图上选一个充电点，立刻让车去充电</td></tr>
+                <tr><td>去停车</td><td>在图上选一个停车点，立刻让车去停靠</td></tr>
+                <tr><td>发送 Instant Action</td><td>立刻发一个动作（不走完整运输单）</td></tr>
+                <tr><td>发送 Order</td><td>给这台车指定起点、终点，直接下发订单</td></tr>
+                <tr><td>重置锁点</td><td>车「占着点下不来」、调度卡住时，尝试清理占用</td></tr>
+                <tr><td>配置路线</td><td>给车设一条固定路线：起点 → 途经点 → 终点，并可设重复次数后发送</td></tr>
+                <tr><td>启用 / 停用 AGV 模拟</td><td>联调演示用。正式产线请勿随意开。停用模拟时，系统还可能顺带重置锁点</td></tr>
+              </tbody>
+            </table>
+            <div class="note">
+              详情里还可以看「当前 Action / 历史 Action」、负载信息；部分状态支持「简单 / 专家」两种查看方式。
+              编辑车辆参数通常要先停用车；车正在执行任务时一般不能停用；换地图前也要先停用。
+            </div>
+            <div class="note warn">
+              如果车处于手动模式，系统会提示无法创建订单。请先在车端切回可自动执行的模式。
+            </div>
+          </section>
+
+          <section class="reveal" id="order" data-index="07">
+            <h2><span class="num">07</span>订单：下发与跟踪</h2>
+            <p>入口：左边菜单 <span class="tag">订单管理</span> → <span class="tag">订单列表</span></p>
+            <p>订单就是「给车的一份工作单」：从哪到哪、谁来做、做到什么状态。</p>
+
+            <h3>7.1 怎么查订单</h3>
+            <div class="how">
+              <div class="title">操作步骤</div>
+              <ol>
+                <li>先选择一张<strong>已启用</strong>的地图（必选，不选查不了）。</li>
+                <li>需要时再按订单号、日期、车辆继续筛选。</li>
+                <li>点「查询」。</li>
+                <li>点某条订单的详情，可看路径、动作、执行过程；执行成功的订单还可以做「路径回溯」回放。</li>
+              </ol>
+            </div>
+            <p>
+              列表里还能看到订单<strong>来源</strong>，方便值班对账：用户创建、WMS、系统创建、前置订单等。
+            </p>
+
+            <h3>7.2 怎么创建一笔运输任务</h3>
+            <div class="how">
+              <div class="title">操作步骤</div>
+              <ol>
+                <li>在订单列表点击「新增 WMS 订单」。</li>
+                <li>选择地图、可用车型；如果想指定某台车，再选具体 AGV（也可以不指定，让系统分配）。</li>
+                <li>选择优先级：
+                  <ul>
+                    <li><strong>立即执行</strong>：尽快插进去做</li>
+                    <li><strong>执行完当前订单后立即执行</strong>：当前做完马上做这一单</li>
+                    <li><strong>系统分配</strong>：按系统默认排队（进入页面时常用这个）</li>
+                  </ul>
+                </li>
+                <li>在地图上选好起点、终点；需要时可添加途经点，并给起终点配置动作。</li>
+                <li>点「保存」。成功会提示「订单创建成功！」</li>
+              </ol>
+            </div>
+            <div class="note warn">
+              创建前请确认：地图已启用、起点终点有效且不是同一个点、车型已选。
+              指定了车辆 → 订单一般进入「待执行」；没指定车辆 → 进入「待分配」。
+              用「新增 WMS 订单」时，请确保接单车辆已打开「自动工作许可」，否则可能派不出去。
+            </div>
+
+            <h3>7.3 订单状态怎么看</h3>
+            <table>
+              <thead><tr><th>状态</th><th>含义（值班怎么理解）</th></tr></thead>
+              <tbody>
+                <tr><td>待分配</td><td>单子建好了，还在等系统选车</td></tr>
+                <tr><td>待执行</td><td>已经分到车，等开始跑</td></tr>
+                <tr><td>工作中</td><td>车正在做这一单</td></tr>
+                <tr><td>执行成功</td><td>做完了</td></tr>
+                <tr><td>已取消 / 订单已关闭</td><td>不再做了</td></tr>
+                <tr><td>执行失败 / 前置失败 等</td><td>出问题了，请点详情看原因，再决定重发或处理现场</td></tr>
+              </tbody>
+            </table>
+
+            <h3>7.4 取消、删除、复制</h3>
+            <ul>
+              <li><strong>取消</strong>：待分配、待执行、工作中的订单，一般可以取消。已经结束的订单通常不能再取消。</li>
+              <li><strong>删除</strong>：还在进行中的订单（待分配/待执行/工作中），列表里通常不能直接删；请先取消或等结束后再处理。</li>
+              <li><strong>复制</strong>：勾选订单后可按次数批量复制，适合重复性任务。</li>
+            </ul>
+
+            <h3>7.5 其他下单方式</h3>
+            <ul>
+              <li>在某台车的详情里点「去充电 / 去停车 / 发送 Order」——适合针对单车快速处理。</li>
+              <li>「Mock订单」是测试用批量造单，正式生产请不要用。</li>
+            </ul>
+            <p>
+              常见订单类型：普通订单、充电订单、停车订单。
+              系统还可能自动生成「前置订单」「避让订单」，一般不用您手动建，列表里看到即可。
+            </p>
+          </section>
+
+          <section class="reveal" id="dashboard" data-index="08">
+            <h2><span class="num">08</span>看板：实时监控</h2>
+            <p>入口：左边菜单 <span class="tag">地图看板</span>（通常新开全屏窗口）</p>
+            <p>看板就是值班大屏，用来一眼看到：车在哪、忙不忙、有没有报错。</p>
+            <div class="how">
+              <div class="title">操作步骤</div>
+              <ol>
+                <li>进入后先选择一张已启用的地图。</li>
+                <li>中间看地图和车辆位置；右边看 AGV 列表卡片。</li>
+                <li>右上角可开关显示：车体安全区、电量、导航线、透明底盘等。</li>
+                <li>要换另一张图监控时，点设置图标重新选地图。</li>
+              </ol>
+            </div>
+            <p>
+              右侧卡片上，除了状态（工作中、空闲、去充电、充电中、报错、离线、未启用等），
+              通常还能看到：正在执行的订单、动作数量、今日成功/失败数、当前位置。
+              很多信息可以继续点进去看订单或车辆详情。
+            </p>
+            <div class="note warn">
+              如果提示「地图未启用」或「当前无可用地图」，请先回到地图列表，把至少一张地图启用。
+            </div>
+            <div class="note ok">建议值班岗位把看板常开，方便随时掌握现场情况。</div>
+          </section>
+
+          <section class="reveal" id="shelf" data-index="09">
+            <h2><span class="num">09</span>货架资料</h2>
+            <p>入口：左边菜单 <span class="tag">货架管理</span> → <span class="tag">货架列表</span></p>
+            <p>
+              这里登记的是货架<strong>型号资料</strong>（叫什么、多大、能承重多少），给业务配置时引用。
+              它不是「现场每个货架实时在哪」的监控画面。
+            </p>
+            <div class="how">
+              <div class="title">怎么新增</div>
+              <ol>
+                <li>点「创建货架」。</li>
+                <li>填写货架型号、名称，以及长/宽/高（毫米）、最大载重（公斤）等。</li>
+                <li>确认保存。之后需要修改可点编辑；不用了可删除（删除前请确认现场已不再使用该型号）。</li>
+              </ol>
+            </div>
+          </section>
+
+          <section class="reveal" id="log" data-index="10">
+            <h2><span class="num">10</span>查日志</h2>
+            <p>入口：左边菜单 <span class="tag">日志管理</span> → <span class="tag">日志列表</span></p>
+            <p>出了问题想追溯「刚才系统做了什么」，可以来这里按时间查。</p>
+            <div class="how">
+              <div class="title">操作步骤</div>
+              <ol>
+                <li>选择日期范围（可用「近7天」等快捷选项）。</li>
+                <li>点「查询」。</li>
+                <li>需要时按类型（信息/警告/错误）、来源、模块继续筛选。</li>
+                <li>点「详情」查看完整内容。</li>
+              </ol>
+            </div>
+          </section>
+
+          <section class="reveal" id="user" data-index="11">
+            <h2><span class="num">11</span>用户与权限（管理员）</h2>
+            <p>入口：右上角头像 → 账号管理 / 角色管理 / 权限管理</p>
+            <ul>
+              <li><strong>账号管理</strong>：给同事开通或停用登录账号。</li>
+              <li><strong>角色管理</strong>：决定某个岗位能看哪些菜单、能点哪些按钮。</li>
+              <li><strong>权限管理</strong>：查看或维护权限项。</li>
+            </ul>
+            <div class="note">
+              建议只给少数管理员开通用户管理；普通操作员按岗位给「够用就好」的权限，减少误操作。
+            </div>
+          </section>
+
+          <section class="reveal" id="faq" data-index="12">
+            <h2><span class="num">12</span>常见问题</h2>
+
+            <div class="faq-item">
+              <h3>打不开地图看板？</h3>
+              <p>先确认至少有一张地图已经启用；再检查浏览器有没有拦截新窗口。</p>
+            </div>
+            <div class="faq-item">
+              <h3>地图想改却改不了？</h3>
+              <p>先停用地图，再编辑保存，最后重新启用。停用失败时，看看是否还有启用中的车，或还有没做完的订单。</p>
+            </div>
+            <div class="faq-item">
+              <h3>车辆启用失败？</h3>
+              <p>按顺序检查：地图是否启用、车是否在线、位置是否已上报并停在地图点上。</p>
+            </div>
+            <div class="faq-item">
+              <h3>下了单，车不动？</h3>
+              <p>
+                依次看：车是否已启用；是不是手动模式；「自动工作许可」开了没有（WMS 订单特别重要）；
+                电量是否过低；是否暂停或报错；是否正在充电且电量还没到可接单水平；车上是否还载着货（载货时系统通常不会自动派下一单）。
+              </p>
+            </div>
+            <div class="faq-item">
+              <h3>去充电 / 去停车失败？</h3>
+              <p>确认地图里有可用的充电点或停车点，并且在弹窗里选好了目标点再发送。</p>
+            </div>
+            <div class="faq-item">
+              <h3>提示没有权限？</h3>
+              <p>联系管理员，在角色管理里给您的岗位开通对应菜单或按钮权限。</p>
+            </div>
+            <div class="faq-item">
+              <h3>安全提醒</h3>
+              <ul>
+                <li>改图、停用车辆前，先确认现场安全和相关任务已处理妥当。</li>
+                <li>「重置锁点」会影响调度，确认异常后再点。</li>
+                <li>「AGV 模拟」「Mock订单」只用于测试，不要在正式产线使用。</li>
+              </ul>
+            </div>
+          </section>
+        </div>
+      </div>
+
+      <footer class="site-footer">
+        <p class="footer-brand">腾擎 · RCS</p>
+        <p class="footer-meta">
+          使用手册 · 若现场版本界面有差异，以实际系统为准
+        </p>
+      </footer>
+    </div>
+    <script>
+      (function () {
+        var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        // Reading progress
+        var bar = document.getElementById('readProgress');
+        function updateProgress() {
+          if (!bar) return;
+          var doc = document.documentElement;
+          var max = doc.scrollHeight - doc.clientHeight;
+          var p = max > 0 ? (doc.scrollTop / max) * 100 : 0;
+          bar.style.width = p + '%';
+        }
+        window.addEventListener('scroll', updateProgress, { passive: true });
+        updateProgress();
+
+        // TOC spy
+        var links = Array.prototype.slice.call(document.querySelectorAll('.toc a[href^="#"]'));
+        var map = {};
+        links.forEach(function (a) {
+          var id = a.getAttribute('href').slice(1);
+          var el = document.getElementById(id);
+          if (el) map[id] = el;
+        });
+        function setActive(id) {
+          links.forEach(function (a) {
+            a.classList.toggle('is-active', a.getAttribute('href') === '#' + id);
+          });
+        }
+        if ('IntersectionObserver' in window) {
+          var io = new IntersectionObserver(
+            function (entries) {
+              var visible = entries
+                .filter(function (e) { return e.isIntersecting; })
+                .sort(function (a, b) { return b.intersectionRatio - a.intersectionRatio; });
+              if (visible[0]) setActive(visible[0].target.id);
+            },
+            { rootMargin: '-20% 0px -55% 0px', threshold: [0, 0.25, 0.5, 1] }
+          );
+          Object.keys(map).forEach(function (id) { io.observe(map[id]); });
+
+          // Section reveal
+          var sections = document.querySelectorAll('section.reveal');
+          if (reduce) {
+            sections.forEach(function (s) { s.classList.add('is-in'); });
+          } else {
+            var rio = new IntersectionObserver(
+              function (entries) {
+                entries.forEach(function (e) {
+                  if (e.isIntersecting) {
+                    e.target.classList.add('is-in');
+                    rio.unobserve(e.target);
+                  }
+                });
+              },
+              { rootMargin: '0px 0px -8% 0px', threshold: 0.12 }
+            );
+            sections.forEach(function (s) { rio.observe(s); });
+            setTimeout(function () {
+              sections.forEach(function (s) { s.classList.add('is-in'); });
+            }, 2500);
+          }
+        } else {
+          document.querySelectorAll('section.reveal').forEach(function (s) {
+            s.classList.add('is-in');
+          });
+        }
+
+        // Hero particle field
+        var canvas = document.getElementById('heroCanvas');
+        var hero = canvas && canvas.closest('.hero');
+        if (!canvas || !hero || reduce) return;
+
+        var ctx = canvas.getContext('2d');
+        var particles = [];
+        var mouse = { x: null, y: null };
+        var raf;
+
+        function resize() {
+          var r = hero.getBoundingClientRect();
+          var dpr = Math.min(window.devicePixelRatio || 1, 2);
+          canvas.width = r.width * dpr;
+          canvas.height = r.height * dpr;
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+          var count = Math.floor((r.width * r.height) / 14000);
+          particles = [];
+          for (var i = 0; i < count; i++) {
+            particles.push({
+              x: Math.random() * r.width,
+              y: Math.random() * r.height,
+              vx: (Math.random() - 0.5) * 0.35,
+              vy: (Math.random() - 0.5) * 0.35,
+              r: Math.random() * 1.6 + 0.4,
+              gold: Math.random() > 0.55
+            });
+          }
+        }
+
+        function tick() {
+          var w = canvas.clientWidth;
+          var h = canvas.clientHeight;
+          ctx.clearRect(0, 0, w, h);
+          for (var i = 0; i < particles.length; i++) {
+            var p = particles[i];
+            p.x += p.vx;
+            p.y += p.vy;
+            if (p.x < 0 || p.x > w) p.vx *= -1;
+            if (p.y < 0 || p.y > h) p.vy *= -1;
+            if (mouse.x != null) {
+              var dx = p.x - mouse.x;
+              var dy = p.y - mouse.y;
+              var d2 = dx * dx + dy * dy;
+              if (d2 < 12000) {
+                p.x += dx * 0.004;
+                p.y += dy * 0.004;
+              }
+            }
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+            ctx.fillStyle = p.gold
+              ? 'rgba(201,162,39,0.55)'
+              : 'rgba(168,120,212,0.4)';
+            ctx.fill();
+          }
+          for (var a = 0; a < particles.length; a++) {
+            for (var b = a + 1; b < particles.length; b++) {
+              var pa = particles[a];
+              var pb = particles[b];
+              var dx = pa.x - pb.x;
+              var dy = pa.y - pb.y;
+              var dist = Math.sqrt(dx * dx + dy * dy);
+              if (dist < 90) {
+                ctx.beginPath();
+                ctx.moveTo(pa.x, pa.y);
+                ctx.lineTo(pb.x, pb.y);
+                ctx.strokeStyle = 'rgba(201,162,39,' + (0.12 * (1 - dist / 90)) + ')';
+                ctx.stroke();
+              }
+            }
+          }
+          raf = requestAnimationFrame(tick);
+        }
+
+        hero.addEventListener('mousemove', function (e) {
+          var r = hero.getBoundingClientRect();
+          mouse.x = e.clientX - r.left;
+          mouse.y = e.clientY - r.top;
+        });
+        hero.addEventListener('mouseleave', function () {
+          mouse.x = mouse.y = null;
+        });
+
+        resize();
+        tick();
+        window.addEventListener('resize', function () {
+          cancelAnimationFrame(raf);
+          resize();
+          tick();
+        });
+      })();
+    </script>
+  </body>
+</html>
