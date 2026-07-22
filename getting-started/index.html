@@ -796,6 +796,68 @@
         color: var(--ink-soft);
       }
 
+
+      .video-embed {
+        margin: 16px 0 8px;
+        width: 100%;
+      }
+
+      .video-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        margin-top: 8px;
+      }
+
+      .video-card {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding: 14px;
+        border-radius: 14px;
+        background: linear-gradient(145deg, rgba(201, 162, 39, 0.08), rgba(91, 45, 142, 0.04));
+        border: 1px solid rgba(201, 162, 39, 0.16);
+      }
+
+      .video-card h3 {
+        margin: 0;
+        font-family: var(--font-display);
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--gold-dim);
+      }
+
+      .video-card video {
+        width: 100%;
+        border-radius: 10px;
+        background: #0e1218;
+        border: 1px solid rgba(14, 18, 24, 0.12);
+        aspect-ratio: 16 / 9;
+        object-fit: contain;
+      }
+
+      .demo-index {
+        margin: 8px 0 0;
+        padding-left: 1.2em;
+        color: var(--ink-soft);
+      }
+
+      .demo-index li { margin-bottom: 10px; }
+
+      .demo-index a {
+        color: var(--gold-dim);
+        font-weight: 600;
+        text-decoration: none;
+        border-bottom: 1px solid rgba(201, 162, 39, 0.35);
+      }
+
+      .demo-index a:hover { border-bottom-color: var(--gold); }
+
+      @media (max-width: 640px) {
+        .video-grid { grid-template-columns: 1fr; }
+      }
+
       table {
         width: 100%;
         border-collapse: separate;
@@ -1359,12 +1421,14 @@
             <li><a href="#shelf">9. 货架资料</a></li>
             <li><a href="#log">10. 查日志</a></li>
             <li><a href="#user">11. 用户与权限</a></li>
-            <li><a href="#faq">12. 常见问题</a></li>
-            <li><a href="#deploy">13. 服务器离线部署</a></li>
+            <li><a href="#demos">12. 演示视频</a></li>
+            <li><a href="#faq">13. 常见问题</a></li>
+            <li><a href="#deploy">14. 部署</a></li>
           </ol>
         </nav>
 
         <div class="content">
+
           <section class="reveal" id="overview" data-index="01">
             <h2><span class="num">01</span>RCS 能做什么</h2>
             <p>
@@ -1518,6 +1582,16 @@
             </div>
             <p>新建地图默认为<strong>未启用</strong>。请继续进入编辑，完善点位与路径后再启用。</p>
 
+            <div class="video-embed" id="demo-create-map">
+              <div class="video-card">
+                <h3>演示：创建地图</h3>
+                <video controls preload="metadata" playsinline>
+                  <source src="assets/create-map.mp4" type="video/mp4" />
+                </video>
+              </div>
+            </div>
+
+
             <h3>5.2 编辑地图（绘制点位与路径）</h3>
             <div class="how">
               <div class="title">操作步骤</div>
@@ -1603,6 +1677,16 @@
               列表里还可以：按地图/序列号查询；批量导入、导出；勾选多台车后批量启用/停用、允许自动/禁止自动。
               在线状态一般会显示：在线、离线、异常断线。
             </p>
+
+            <div class="video-embed" id="demo-create-agv">
+              <div class="video-card">
+                <h3>演示：创建 AGV</h3>
+                <video controls preload="metadata" playsinline>
+                  <source src="assets/create-agv.mp4" type="video/mp4" />
+                </video>
+              </div>
+            </div>
+
 
             <h4>电量参数说明（编辑车辆时常见）</h4>
             <table>
@@ -1697,6 +1781,16 @@
               使用「新增 WMS 订单」时，请确保接单车辆已开启「自动工作许可」，否则可能无法派发。
             </div>
 
+            <div class="video-embed" id="demo-create-order">
+              <div class="video-card">
+                <h3>演示：创建订单并派单</h3>
+                <video controls preload="metadata" playsinline>
+                  <source src="assets/create-order-and-assign.mp4" type="video/mp4" />
+                </video>
+              </div>
+            </div>
+
+
             <h3>7.3 订单状态说明</h3>
             <table>
               <thead><tr><th>状态</th><th>含义说明</th></tr></thead>
@@ -1749,6 +1843,15 @@
             <div class="note warn">
               如果提示「地图未启用」或「当前无可用地图」，请先回到地图列表，把至少一张地图启用。
             </div>
+            <div class="video-embed" id="demo-avoid">
+              <div class="video-card">
+                <h3>演示：避让演示</h3>
+                <video controls preload="metadata" playsinline>
+                  <source src="assets/avoid.mp4" type="video/mp4" />
+                </video>
+              </div>
+            </div>
+
             <div class="note ok">建议值班岗位保持看板常开，以便随时掌握现场情况。</div>
           </section>
 
@@ -1797,8 +1900,22 @@
             </div>
           </section>
 
-          <section class="reveal" id="faq" data-index="12">
-            <h2><span class="num">12</span>常见问题</h2>
+
+          <section class="reveal" id="demos" data-index="12">
+            <h2><span class="num">12</span>演示视频</h2>
+            <p>
+              常用操作已在对应章节内嵌演示视频，可按主题跳转观看：
+            </p>
+            <ul class="demo-index">
+              <li><a href="#demo-create-map">创建地图</a> — 见「地图：建好并启用」</li>
+              <li><a href="#demo-create-agv">创建 AGV</a> — 见「车辆：登记并启用」</li>
+              <li><a href="#demo-create-order">创建订单并派单</a> — 见「订单：下发与跟踪」</li>
+              <li><a href="#demo-avoid">避让演示</a> — 见「看板：实时监控」</li>
+            </ul>
+          </section>
+
+          <section class="reveal" id="faq" data-index="13">
+            <h2><span class="num">13</span>常见问题</h2>
 
             <div class="faq-item">
               <h3>无法打开地图看板？</h3>
@@ -1837,8 +1954,8 @@
             </div>
           </section>
 
-          <section class="reveal" id="deploy" data-index="13">
-            <h2><span class="num">13</span>服务器离线部署</h2>
+          <section class="reveal" id="deploy" data-index="14">
+            <h2><span class="num">14</span>部署</h2>
             <p>
               现场需先在服务器完成 RCS 安装，方可打开管理端并使用本手册中的功能。
               请先选择服务器操作系统，查看对应说明。当前一键安装包面向 <strong>Ubuntu（x86_64）Linux</strong> 服务器。
@@ -1907,6 +2024,8 @@
               </div>
             </div>
           </section>
+
+
         </div>
       </div>
 
